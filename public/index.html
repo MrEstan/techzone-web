@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TECHZONEUY | Tu Mundo Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #000;
+        color: #fff;
+      }
+      .perspective-1000 {
+        perspective: 1200px;
+      }
+      #hero-carousel {
+        position: relative;
+        transform-style: preserve-3d;
+        /* MODIFICACIÓN: Asegura que ocupe el centro del contenedor */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #hero-carousel .carousel-card {
+        position: absolute;
+        /* MODIFICACIÓN: Cambiado de 60%/70% a 50% para un centrado perfecto */
+        top: 50%;
+        left: 50%;
+        transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      /* ... resto de tus estilos ... */
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              blue: {
+                400: "#60a5fa",
+                500: "#3b82f6",
+                600: "#2563eb",
+                700: "#1d4ed8",
+              },
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="selection:bg-blue-600 selection:text-white antialiased">
+    <nav
+      class="fixed w-full z-50 bg-black/90 backdrop-blur-md border-b border-gray-800"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+          <a
+            href="index.html"
+            class="flex-shrink-0 flex items-center gap-2 group"
+          >
+            <img
+              src="img/logo.png"
+              alt="TECHZONEUY"
+              class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover transition-transform duration-300 group-hover:rotate-12"
+            />
+            <div class="hidden sm:block">
+              <span class="text-xl font-bold tracking-[0.2em] uppercase"
+                >TECH<span class="text-blue-600">ZONE</span></span
+              >
+            </div>
+          </a>
+          <div class="hidden md:flex items-center space-x-8">
+            <a href="index.html" class="text-blue-500 font-medium">Inicio</a>
+            <a
+              href="catalogo.html"
+              class="text-gray-300 hover:text-blue-500 transition-colors font-medium"
+              >Catálogo</a
+            >
+            <a
+              href="catalogo.html#contacto"
+              class="text-gray-300 hover:text-blue-500 transition-colors font-medium"
+              >Contacto</a
+            >
+          </div>
+          <div class="flex items-center gap-4">
+            <a
+              href="catalogo.html"
+              class="relative p-2 text-gray-300 hover:text-blue-500 transition-colors"
+            >
+              <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+            </a>
+            <button
+              id="mobile-menu-btn"
+              class="md:hidden p-2 text-gray-300 hover:text-white transition-colors"
+              aria-label="Menu"
+            >
+              <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
+              <i data-lucide="x" id="close-icon" class="w-6 h-6 hidden"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        id="mobile-menu"
+        class="hidden md:hidden bg-gray-900 border-b border-gray-800 absolute w-full left-0"
+      >
+        <div class="px-4 pt-2 pb-6 space-y-2">
+          <a
+            href="index.html"
+            class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-blue-500 hover:bg-gray-800 rounded-md"
+            >Inicio</a
+          >
+          <a
+            href="catalogo.html"
+            class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-blue-500 hover:bg-gray-800 rounded-md"
+            >Catálogo</a
+          >
+          <a
+            href="catalogo.html#contacto"
+            class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-blue-500 hover:bg-gray-800 rounded-md"
+            >Contacto</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <main class="pt-20">
+      <section
+        id="inicio"
+        class="relative bg-gradient-to-br from-black via-gray-900 to-black py-20 lg:py-32 overflow-hidden min-h-[85vh] flex items-center"
+      >
+        <div
+          class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"
+        ></div>
+        <div
+          class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-blue-900/20 rounded-full blur-3xl pointer-events-none"
+        ></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div class="fade-up">
+              <h1
+                class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight mb-4 sm:mb-6"
+              >
+                Tu Mundo Tech,<br />
+                <span
+                  class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600"
+                  >Al Siguiente Nivel.</span
+                >
+              </h1>
+              <p
+                class="text-base sm:text-lg text-gray-400 mb-6 sm:mb-8 max-w-lg"
+              >
+                Encuentra los mejores accesorios para tus dispositivos.
+                Auriculares, parlantes, fundas y cargadores con la garantía de
+                TECHZONEUY.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4">
+                <a
+                  href="catalogo.html"
+                  class="inline-flex justify-center items-center px-8 py-4 text-base font-bold rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)]"
+                >
+                  Ver Catálogo
+                  <i data-lucide="chevron-right" class="ml-2 w-5 h-5"></i>
+                </a>
+              </div>
+            </div>
+            <div
+              class="h-[350px] sm:h-[450px] lg:h-[500px] w-full perspective-1000 relative flex items-center justify-center fade-in"
+            >
+              <div
+                id="hero-carousel"
+                class="relative w-full h-full flex items-center justify-center"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer
+      id="contacto"
+      class="bg-black border-t border-gray-900 pt-10 sm:pt-12 pb-6 sm:pb-8"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8"
+        >
+          <div class="fade-up">
+            <div class="flex items-center gap-2 mb-3 sm:mb-4">
+              <img
+                src="img/logo.png"
+                alt="TECHZONEUY"
+                class="w-8 h-8 rounded-full object-cover"
+              />
+              <span class="text-xl font-bold tracking-[0.2em] uppercase"
+                >TECH<span class="text-blue-600">ZONE</span></span
+              >
+            </div>
+            <p class="text-gray-400 max-w-sm text-xs sm:text-sm">
+              Tu tienda de confianza para accesorios tecnológicos.
+            </p>
+          </div>
+          <div class="fade-up" style="transition-delay: 0.1s">
+            <h4 class="text-white font-bold mb-3 sm:mb-4 text-sm sm:text-base">
+              Contacto
+            </h4>
+            <ul class="space-y-2 text-gray-400 text-sm">
+              <li class="flex items-center gap-2">
+                <i data-lucide="map-pin" class="w-4 h-4 text-blue-500"></i>
+                Direccion: Uruguay - Santa Lucía
+              </li>
+              <li class="flex items-center gap-2">
+                <i data-lucide="instagram" class="w-4 h-4 text-blue-500"></i>
+                Instagram: techzoneuy
+              </li>
+              <li class="flex items-center gap-2">
+                <i data-lucide="phone" class="w-4 h-4 text-blue-500"></i> +598
+                92 486 156
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="border-t border-gray-900 pt-5 sm:pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500"
+        >
+          <p>
+            &copy; 2026 TechZone UY. Todos los derechos reservados.
+            <a href="admin.html" class="text-gray-700 hover:text-gray-500">.</a>
+          </p>
+          <div class="flex items-center gap-4">
+            <a
+              href="#"
+              class="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300"
+              ><i data-lucide="instagram" class="w-4 h-4"></i
+            ></a>
+            <a
+              href="#"
+              class="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300"
+              ><i data-lucide="facebook" class="w-4 h-4"></i
+            ></a>
+            <a
+              href="#"
+              class="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300"
+              ><i data-lucide="twitter" class="w-4 h-4"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Botón flotante WhatsApp -->
+    <a
+      href="https://api.whatsapp.com/send?phone=59892486156&text=Hola!%20Vi%20su%20cat%C3%A1logo%20y%20quer%C3%ADa%20saber%20si%20me%20puede%20asesorar%20con%20un%20producto%20que%20estoy%20buscando%3F%20%C2%A1Gracias!%20%F0%9F%91%8B"
+      target="_blank"
+      class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-40 pulse-blue"
+    >
+      <i data-lucide="message-circle" class="w-6 h-6"></i>
+    </a>
+
+    <script>
+      lucide.createIcons();
+
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const menuIcon = document.getElementById("menu-icon");
+      const closeIcon = document.getElementById("close-icon");
+      const mobileLinks = document.querySelectorAll(".mobile-link");
+
+      function toggleMenu() {
+        mobileMenu.classList.toggle("hidden");
+        menuIcon.classList.toggle("hidden");
+        closeIcon.classList.toggle("hidden");
+      }
+      mobileMenuBtn.addEventListener("click", toggleMenu);
+      mobileLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          if (!mobileMenu.classList.contains("hidden")) toggleMenu();
+        });
+      });
+
+      let carouselData = [];
+      const carouselContainer = document.getElementById("hero-carousel");
+      let currentIdx = 0;
+
+      async function loadCarousel() {
+        try {
+          const products = await fetch('api/products.php?action=list').then(r => r.json());
+          const featured = products.filter(p => p.category === 'airpods').slice(0, 5);
+          if (featured.length > 0) {
+            carouselData = featured.map(p => ({
+              title: p.name,
+              price: '$' + p.price.toLocaleString('es-UY'),
+              img: p.image
+            }));
+          } else {
+            carouselData = [
+              { title: "AirPods Pro", price: "$2000", img: "img/airpods-pro.png" },
+              { title: "AirPods 4 ANC", price: "$2000", img: "img/airpods-4-anc.png" },
+              { title: "AirPods Max", price: "$2200", img: "img/airpods-max.png" }
+            ];
+          }
+          render();
+        } catch (err) {
+          carouselData = [
+            { title: "AirPods Pro", price: "$2000", img: "img/airpods-pro.png" },
+            { title: "AirPods 4 ANC", price: "$2000", img: "img/airpods-4-anc.png" },
+            { title: "AirPods Max", price: "$2200", img: "img/airpods-max.png" }
+          ];
+          render();
+        }
+      }
+
+      function render() {
+        const total = carouselData.length;
+        if (total === 0) return;
+        carouselData.forEach((item, i) => {
+          let card = document.getElementById("card-" + i);
+          if (!card) {
+            card = document.createElement("div");
+            card.id = "card-" + i;
+            const isMobile = window.innerWidth < 640;
+            const cardW = isMobile ? 240 : 320;
+            const imgW = isMobile ? 'w-32 h-32' : 'w-48 h-48';
+            card.className = "carousel-card bg-gray-900 border border-gray-700 rounded-3xl cursor-pointer flex flex-col items-center";
+            card.style.width = cardW + 'px';
+            card.innerHTML = `<img src="${item.img}" class="product-img ${imgW} mb-4 sm:mb-6 rounded-xl object-contain">
+              <h3 class="text-base sm:text-xl font-bold mb-1 sm:mb-2 px-4 text-center">${item.title}</h3>
+              <span class="text-blue-500 font-black text-lg sm:text-2xl">${item.price}</span>`;
+            card.onclick = () => { currentIdx = i; render(); };
+            carouselContainer.appendChild(card);
+          }
+          let diff = i - currentIdx;
+          if (diff < -Math.floor(total / 2)) diff += total;
+          if (diff > Math.floor(total / 2)) diff -= total;
+          let tx, tz, scale, opacity, z;
+          if (diff === 0) { tx = "-50%"; tz = "60px"; scale = 1; opacity = 1; z = 10; }
+          else if (diff === 1) { tx = "20%"; tz = "-60px"; scale = 0.75; opacity = 0.7; z = 5; }
+          else if (diff === -1) { tx = "-120%"; tz = "-60px"; scale = 0.75; opacity = 0.7; z = 5; }
+          else { tx = diff > 0 ? "100%" : "-200%"; tz = "-150px"; scale = 0.5; opacity = 0; z = 1; }
+          card.style.transform = `translateX(${tx}) translateY(-50%) translateZ(${tz}) scale(${scale})`;
+          card.style.opacity = opacity;
+          card.style.zIndex = z;
+          card.style.filter = diff === 0 ? "none" : "brightness(0.6)";
+        });
+      }
+      loadCarousel();
+      setInterval(() => {
+        if (carouselData.length > 0) {
+          currentIdx = (currentIdx + 1) % carouselData.length;
+          render();
+        }
+      }, 4000);
+
+      // Scroll Animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll(".fade-up, .fade-in").forEach((el) => {
+        observer.observe(el);
+      });
+
+      // Trigger initial animations
+      setTimeout(() => {
+        document.querySelectorAll(".fade-up").forEach((el) => {
+          el.classList.add("visible");
+        });
+      }, 100);
+    </script>
+  </body>
+</html>
