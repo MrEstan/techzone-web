@@ -1,0 +1,4 @@
+{"ts":"2026-08-04T04:42:50.648Z","cmd":"goto","args":"http://localhost:8080/index.html","origin":"about:blank","durationMs":2391,"status":"error","hasCookies":false,"mode":"launched","error":"page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:8080/index.html\nCall log:\n\u001b[2m  - navigating to \"http://localhost:8080/index.html\", waiting until \"domcontentloaded\"\u001b[22m\n"}
+{"ts":"2026-08-04T04:42:51.379Z","cmd":"screenshot","args":"C:/Users/MRESTA~1/AppData/Local/Temp/index-screenshot.png","origin":"chrome-error://chromewebdata/","durationMs":473,"status":"ok","hasCookies":false,"mode":"launched"}
+{"ts":"2026-08-04T04:42:51.560Z","cmd":"text","args":"","origin":"chrome-error://chromewebdata/","durationMs":5,"status":"ok","hasCookies":false,"mode":"launched"}
+{"ts":"2026-08-04T04:42:51.702Z","cmd":"console","args":"--errors","origin":"chrome-error://chromewebdata/","durationMs":0,"status":"ok","hasCookies":false,"mode":"launched"}
