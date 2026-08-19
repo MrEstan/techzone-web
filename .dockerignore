@@ -1,5 +1,4 @@
 vendor/
-database.sqlite
 .git
 .gitignore
 *.md

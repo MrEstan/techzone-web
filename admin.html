@@ -8,37 +8,287 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
-      * {
-        font-family: "Inter", sans-serif;
+      :root {
+        --color-bg: #000;
+        --color-fg: #fff;
+        --color-blue-400: #60a5fa;
+        --color-blue-500: #3b82f6;
+        --color-blue-600: #2563eb;
+        --color-blue-700: #1d4ed8;
       }
+      * { font-family: "Inter", sans-serif; }
       body {
-        background-color: #000;
-        color: #fff;
+        background-color: var(--color-bg);
+        color: var(--color-fg);
+        overflow-x: hidden;
       }
-      ::-webkit-scrollbar {
-        width: 8px;
+
+      /* Scrollbar */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #111; }
+      ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: var(--color-blue-600); }
+
+      /* ============ ANIMATIONS ============ */
+      @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+      @keyframes glow-pulse {
+        0%, 100% { box-shadow: 0 0 20px rgba(37, 99, 235, 0.4); }
+        50% { box-shadow: 0 0 40px rgba(37, 99, 235, 0.8); }
       }
-      ::-webkit-scrollbar-track {
-        background: #111;
+      @keyframes gradient-shift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
       }
-      ::-webkit-scrollbar-thumb {
-        background: #333;
-        border-radius: 4px;
+      @keyframes blob {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
       }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #2563eb;
+      @keyframes modal-in {
+        from { opacity: 0; transform: scale(0.9) translateY(20px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
       }
+      @keyframes overlay-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes slide-down {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes slide-up-fade {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes counter {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes spin-slow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      @keyframes check-pop {
+        0% { transform: scale(0); }
+        50% { transform: scale(1.3); }
+        100% { transform: scale(1); }
+      }
+      @keyframes row-enter {
+        from { opacity: 0; transform: translateX(-20px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes success-pulse {
+        0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+        70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+      }
+
+      .anim-gradient {
+        background-size: 200% 200%;
+        animation: gradient-shift 6s ease infinite;
+      }
+      .anim-blob { animation: blob 8s ease-in-out infinite; }
+      .anim-float { animation: float 3s ease-in-out infinite; }
+      .anim-spin-slow { animation: spin-slow 8s linear infinite; }
+      .anim-check-pop { animation: check-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+      .anim-success-pulse { animation: success-pulse 1s ease; }
+      .anim-row-enter { animation: row-enter 0.4s ease-out; }
+
+      /* Reveal animations */
+      .fade-up {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .fade-up.visible { opacity: 1; transform: translateY(0); }
+      .fade-in { opacity: 0; transition: opacity 0.6s ease-out; }
+      .fade-in.visible { opacity: 1; }
+      .scale-in {
+        opacity: 0;
+        transform: scale(0.9);
+        transition: opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .scale-in.visible { opacity: 1; transform: scale(1); }
+
+      /* ============ COMPONENTS ============ */
+      .glass {
+        background: rgba(17, 24, 39, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .stat-card {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(37, 99, 235, 0.15);
+      }
+      .stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(37, 99, 235, 0.08), transparent);
+        transition: left 0.8s ease;
+      }
+      .stat-card:hover::before { left: 100%; }
+      .stat-card:hover {
+        transform: translateY(-6px);
+        border-color: var(--color-blue-500);
+        box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.2);
+      }
+      .stat-card:hover .stat-icon {
+        transform: scale(1.15) rotate(-6deg);
+      }
+      .stat-icon { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
       .tab-active {
-        border-bottom: 2px solid #3b82f6;
-        color: #3b82f6;
+        position: relative;
+        color: var(--color-blue-500);
       }
-      .scrollbar-hide::-webkit-scrollbar {
-        display: none;
+      .tab-active::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--color-blue-500);
+        animation: slide-down 0.4s ease;
       }
-      .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+
+      /* Tabs hover */
+      .tab-btn {
+        position: relative;
+        transition: all 0.3s ease;
       }
+      .tab-btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+      }
+      .tab-btn:hover::before { transform: scaleX(1); }
+
+      /* Modals */
+      .modal-overlay {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .modal-overlay.active {
+        opacity: 1;
+        animation: overlay-in 0.3s ease;
+      }
+      .modal-content {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .modal-overlay.active .modal-content {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        animation: modal-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      /* Toast */
+      .toast-enter {
+        animation: slide-down 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      /* Buttons */
+      .btn-primary {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+      .btn-primary::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
+        transition: left 0.6s ease;
+      }
+      .btn-primary:hover::before { left: 100%; }
+
+      /* Tables */
+      .table-row {
+        transition: all 0.3s ease;
+      }
+      .table-row:hover {
+        background: rgba(37, 99, 235, 0.05);
+        transform: translateX(4px);
+      }
+
+      /* Inputs */
+      .input-field {
+        transition: all 0.3s ease;
+      }
+      .input-field:focus {
+        border-color: var(--color-blue-500);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        transform: translateY(-1px);
+      }
+
+      /* Upload zone */
+      .upload-zone {
+        transition: all 0.3s ease;
+      }
+      .upload-zone:hover {
+        border-color: var(--color-blue-500);
+        background: rgba(37, 99, 235, 0.05);
+      }
+
+      .scrollbar-hide::-webkit-scrollbar { display: none; }
+      .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+      /* Action buttons */
+      .action-btn {
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .action-btn:hover {
+        transform: scale(1.15) rotate(-6deg);
+      }
+
+      /* Login */
+      .login-card {
+        transition: all 0.5s ease;
+      }
+      .login-card:hover {
+        border-color: var(--color-blue-500);
+        box-shadow: 0 0 60px rgba(37, 99, 235, 0.3);
+        transform: translateY(-4px);
+      }
+
+      /* Orders list items */
+      .order-card {
+        transition: all 0.3s ease;
+      }
+      .order-card:hover {
+        border-color: rgba(37, 99, 235, 0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px -10px rgba(37, 99, 235, 0.2);
+      }
+
+      /* Pulse on new data */
+      @keyframes value-pulse {
+        0% { transform: scale(1); color: var(--color-blue-500); }
+        50% { transform: scale(1.1); color: var(--color-blue-400); }
+        100% { transform: scale(1); }
+      }
+      .pulse-value { animation: value-pulse 0.5s ease; }
     </style>
     <script>
       tailwind.config = {
@@ -64,91 +314,113 @@
       class="fixed top-16 right-4 sm:right-6 lg:right-20 z-50 flex flex-col gap-2 pointer-events-none"
     ></div>
 
-    <!-- Login Screen -->
+    <!-- ========== LOGIN SCREEN ========== -->
     <div
       id="login-screen"
-      class="min-h-screen flex items-center justify-center p-4"
+      class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
     >
-      <div
-        class="bg-gray-900 border border-gray-800 rounded-2xl p-8 w-full max-w-md"
-      >
+      <!-- Animated background -->
+      <div class="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
+      <div class="absolute top-0 right-0 -mr-32 -mt-32 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl anim-blob"></div>
+      <div class="absolute bottom-0 left-0 -ml-32 -mb-32 w-96 h-96 bg-blue-900/20 rounded-full blur-3xl anim-blob" style="animation-delay: -3s"></div>
+      <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(59,130,246,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.5) 1px, transparent 1px); background-size: 50px 50px;"></div>
+
+      <div class="login-card glass rounded-2xl p-8 w-full max-w-md relative z-10 scale-in visible">
         <div class="text-center mb-8">
-          <img
-            src="img/logo.png"
-            alt="TECHZONEUY"
-            class="w-16 h-16 rounded-full object-cover mx-auto mb-4"
-          />
-          <h1 class="text-2xl font-bold">Panel de Administración</h1>
-          <p class="text-gray-400 text-sm mt-2">
-            Ingresá tu contraseña para continuar
-          </p>
+          <div class="relative inline-block mb-4">
+            <img
+              src="img/logo.png"
+              alt="TECHZONEUY"
+              class="w-20 h-20 rounded-full object-cover mx-auto anim-float"
+            />
+            <div class="absolute -inset-2 bg-blue-500/20 rounded-full blur-xl -z-10"></div>
+          </div>
+          <h1 class="text-3xl font-extrabold mb-2">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600 anim-gradient">Admin Panel</span>
+          </h1>
+          <p class="text-gray-400 text-sm">Ingresá tus credenciales para continuar</p>
         </div>
         <form id="login-form" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2"
-              >Usuario</label
-            >
-            <input
-              type="text"
-              id="username-input"
-              class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
-              placeholder="Tu usuario"
-              required
-            />
+            <label class="block text-sm font-medium text-gray-300 mb-2">Usuario</label>
+            <div class="relative">
+              <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500"></i>
+              <input
+                type="text"
+                id="username-input"
+                class="input-field w-full bg-gray-800/50 border border-gray-700 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none"
+                placeholder="Tu usuario"
+                required
+              />
+            </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2"
-              >Contraseña</label
-            >
-            <input
-              type="password"
-              id="password-input"
-              class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
-              placeholder="••••••••"
-              required
-            />
+            <label class="block text-sm font-medium text-gray-300 mb-2">Contraseña</label>
+            <div class="relative">
+              <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500"></i>
+              <input
+                type="password"
+                id="password-input"
+                class="input-field w-full bg-gray-800/50 border border-gray-700 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none"
+                placeholder="••••••••"
+                required
+              />
+            </div>
           </div>
-          <p id="login-error" class="text-red-500 text-sm hidden">
-            Usuario o contraseña incorrectos
+          <p id="login-error" class="text-red-500 text-sm hidden flex items-center gap-2">
+            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+            <span>Usuario o contraseña incorrectos</span>
           </p>
           <button
             type="submit"
-            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all"
+            class="btn-primary w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)]"
           >
-            Ingresar
+            <span class="flex items-center justify-center gap-2">
+              Ingresar <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </span>
           </button>
         </form>
       </div>
     </div>
 
-    <!-- Admin Panel -->
+    <!-- ========== ADMIN PANEL ========== -->
     <div id="admin-panel" class="hidden min-h-screen">
       <!-- Navbar -->
-      <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
+      <nav class="glass sticky top-0 z-40 border-b border-gray-800/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex justify-between items-center h-16">
             <div class="flex items-center gap-3">
-              <img
-                src="img/logo.png"
-                alt="TECHZONEUY"
-                class="w-8 h-8 rounded-full object-cover"
-              />
-              <span class="text-lg font-bold tracking-[0.15em] uppercase"
-                >Admin<span class="text-blue-600">Panel</span></span
-              >
+              <div class="relative">
+                <img
+                  src="img/logo.png"
+                  alt="TECHZONEUY"
+                  class="w-9 h-9 rounded-full object-cover"
+                />
+                <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-black"></div>
+              </div>
+              <div>
+                <span class="text-lg font-bold tracking-[0.15em] uppercase leading-none block">
+                  Admin<span class="text-blue-500">Panel</span>
+                </span>
+                <span class="text-xs text-gray-500 hidden sm:block">TECHZONEUY</span>
+              </div>
             </div>
-            <div class="flex items-center gap-3 sm:gap-4">
+            <div class="flex items-center gap-2 sm:gap-4">
+              <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20">
+                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span class="text-xs font-medium text-blue-300">En vivo</span>
+              </div>
               <a
                 href="catalogo.html"
                 target="_blank"
-                class="hidden sm:flex text-gray-400 hover:text-white text-sm items-center gap-2"
+                class="hidden sm:flex text-gray-400 hover:text-white text-sm items-center gap-2 transition-all hover:gap-3"
               >
                 <i data-lucide="external-link" class="w-4 h-4"></i>
                 Ver tienda
               </a>
               <button
                 onclick="logout()"
-                class="text-gray-400 hover:text-red-500 text-sm flex items-center gap-2"
+                class="text-gray-400 hover:text-red-500 text-sm flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-red-500/10 transition-all"
               >
                 <i data-lucide="log-out" class="w-4 h-4"></i>
                 <span class="hidden sm:inline">Salir</span>
@@ -158,60 +430,62 @@
         </div>
       </nav>
 
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <!-- Tabs -->
         <div
-          class="flex items-center gap-4 sm:gap-6 border-b border-gray-800 mb-8 overflow-x-auto scrollbar-hide"
+          class="flex items-center gap-2 sm:gap-4 border-b border-gray-800 mb-6 sm:mb-8 overflow-x-auto scrollbar-hide"
         >
           <button
             onclick="showTab('dashboard')"
             id="tab-dashboard"
-            class="pb-3 px-1 font-medium text-sm transition-colors tab-active"
+            class="tab-btn tab-active pb-3 px-3 font-medium text-sm transition-colors whitespace-nowrap"
           >
-            <i data-lucide="layout-dashboard" class="w-4 h-4 inline mr-1"></i>
+            <i data-lucide="layout-dashboard" class="w-4 h-4 inline mr-1.5"></i>
             Dashboard
           </button>
           <button
             onclick="showTab('products')"
             id="tab-products"
-            class="pb-3 px-1 font-medium text-sm text-gray-400 hover:text-white transition-colors"
+            class="tab-btn pb-3 px-3 font-medium text-sm text-gray-400 hover:text-white transition-colors whitespace-nowrap"
           >
-            <i data-lucide="package" class="w-4 h-4 inline mr-1"></i> Productos
+            <i data-lucide="package" class="w-4 h-4 inline mr-1.5"></i>
+            Productos
           </button>
           <button
             onclick="showTab('orders')"
             id="tab-orders"
-            class="pb-3 px-1 font-medium text-sm text-gray-400 hover:text-white transition-colors"
+            class="tab-btn pb-3 px-3 font-medium text-sm text-gray-400 hover:text-white transition-colors whitespace-nowrap"
           >
-            <i data-lucide="shopping-bag" class="w-4 h-4 inline mr-1"></i>
+            <i data-lucide="shopping-bag" class="w-4 h-4 inline mr-1.5"></i>
             Pedidos
           </button>
           <div class="ml-auto flex-shrink-0">
             <button
               onclick="changePassword()"
-              class="pb-3 px-1 font-medium text-sm text-gray-500 hover:text-white transition-colors"
+              class="tab-btn pb-3 px-3 font-medium text-sm text-gray-500 hover:text-white transition-colors whitespace-nowrap"
             >
-              <i data-lucide="key" class="w-4 h-4 inline mr-1"></i>
-              <span class="hidden sm:inline">Cambiar contraseña</span>
+              <i data-lucide="key" class="w-4 h-4 inline mr-1.5"></i>
+              <span class="hidden sm:inline">Contraseña</span>
             </button>
           </div>
         </div>
 
-        <!-- Dashboard Tab -->
+        <!-- ========== DASHBOARD ========== -->
         <div id="content-dashboard">
+          <!-- Header -->
+          <div class="mb-6 sm:mb-8 fade-up">
+            <h2 class="text-2xl sm:text-3xl font-extrabold mb-1">
+              Bienvenido al <span class="text-blue-500">panel</span>
+            </h2>
+            <p class="text-gray-400 text-sm">Resumen general de tu tienda</p>
+          </div>
+
           <!-- Stats -->
-          <div
-            class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8"
-          >
-            <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6">
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
+            <div class="stat-card glass rounded-xl p-4 sm:p-6 fade-up">
               <div class="flex items-center gap-3">
-                <div
-                  class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600/20 rounded-xl flex items-center justify-center flex-shrink-0"
-                >
-                  <i
-                    data-lucide="dollar-sign"
-                    class="w-5 h-5 sm:w-6 sm:h-6 text-blue-500"
-                  ></i>
+                <div class="stat-icon w-10 h-10 sm:w-12 sm:h-12 bg-blue-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="dollar-sign" class="w-5 h-5 sm:w-6 sm:h-6 text-blue-500"></i>
                 </div>
                 <div class="min-w-0">
                   <p class="text-lg sm:text-2xl font-bold truncate" id="stat-revenue">$0</p>
@@ -219,15 +493,10 @@
                 </div>
               </div>
             </div>
-            <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6">
+            <div class="stat-card glass rounded-xl p-4 sm:p-6 fade-up" style="transition-delay: 0.05s">
               <div class="flex items-center gap-3">
-                <div
-                  class="w-10 h-10 sm:w-12 sm:h-12 bg-green-600/20 rounded-xl flex items-center justify-center flex-shrink-0"
-                >
-                  <i
-                    data-lucide="shopping-bag"
-                    class="w-5 h-5 sm:w-6 sm:h-6 text-green-500"
-                  ></i>
+                <div class="stat-icon w-10 h-10 sm:w-12 sm:h-12 bg-green-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="shopping-bag" class="w-5 h-5 sm:w-6 sm:h-6 text-green-500"></i>
                 </div>
                 <div class="min-w-0">
                   <p class="text-lg sm:text-2xl font-bold" id="stat-orders">0</p>
@@ -235,11 +504,9 @@
                 </div>
               </div>
             </div>
-            <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6">
+            <div class="stat-card glass rounded-xl p-4 sm:p-6 fade-up" style="transition-delay: 0.1s">
               <div class="flex items-center gap-3">
-                <div
-                  class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-600/20 rounded-xl flex items-center justify-center flex-shrink-0"
-                >
+                <div class="stat-icon w-10 h-10 sm:w-12 sm:h-12 bg-purple-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
                   <i data-lucide="package" class="w-5 h-5 sm:w-6 sm:h-6 text-purple-500"></i>
                 </div>
                 <div class="min-w-0">
@@ -248,15 +515,10 @@
                 </div>
               </div>
             </div>
-            <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6">
+            <div class="stat-card glass rounded-xl p-4 sm:p-6 fade-up" style="transition-delay: 0.15s">
               <div class="flex items-center gap-3">
-                <div
-                  class="w-10 h-10 sm:w-12 sm:h-12 bg-orange-600/20 rounded-xl flex items-center justify-center flex-shrink-0"
-                >
-                  <i
-                    data-lucide="trending-up"
-                    class="w-5 h-5 sm:w-6 sm:h-6 text-orange-500"
-                  ></i>
+                <div class="stat-icon w-10 h-10 sm:w-12 sm:h-12 bg-orange-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="trending-up" class="w-5 h-5 sm:w-6 sm:h-6 text-orange-500"></i>
                 </div>
                 <div class="min-w-0">
                   <p class="text-lg sm:text-2xl font-bold" id="stat-items-sold">0</p>
@@ -266,24 +528,75 @@
             </div>
           </div>
 
+          <!-- Status Breakdown -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-8">
+            <div class="stat-card glass rounded-xl p-4 sm:p-5 fade-up" style="transition-delay: 0.2s">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                  <span class="text-sm font-medium text-gray-300">Pendientes</span>
+                </div>
+                <span class="text-xl font-black text-yellow-400" id="stat-pending">0</span>
+              </div>
+              <div class="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                <div id="bar-pending" class="h-full bg-yellow-500 transition-all duration-700" style="width: 0%"></div>
+              </div>
+            </div>
+            <div class="stat-card glass rounded-xl p-4 sm:p-5 fade-up" style="transition-delay: 0.25s">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span class="text-sm font-medium text-gray-300">Completados</span>
+                </div>
+                <span class="text-xl font-black text-green-400" id="stat-completed">0</span>
+              </div>
+              <div class="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                <div id="bar-completed" class="h-full bg-green-500 transition-all duration-700" style="width: 0%"></div>
+              </div>
+            </div>
+            <div class="stat-card glass rounded-xl p-4 sm:p-5 fade-up" style="transition-delay: 0.3s">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+                  <span class="text-sm font-medium text-gray-300">Cancelados</span>
+                </div>
+                <span class="text-xl font-black text-red-400" id="stat-cancelled">0</span>
+              </div>
+              <div class="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                <div id="bar-cancelled" class="h-full bg-red-500 transition-all duration-700" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
           <!-- Recent Orders -->
-          <div class="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <h3 class="text-lg font-bold mb-4">Pedidos recientes</h3>
+          <div class="glass rounded-xl p-6 fade-up" style="transition-delay: 0.35s">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-bold flex items-center gap-2">
+                <i data-lucide="activity" class="w-5 h-5 text-blue-500"></i>
+                Pedidos recientes
+              </h3>
+              <button onclick="showTab('orders')" class="text-xs text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1">
+                Ver todos <i data-lucide="arrow-right" class="w-3 h-3"></i>
+              </button>
+            </div>
             <div id="recent-orders" class="space-y-3">
-              <p class="text-gray-500 text-sm">No hay pedidos aún</p>
+              <p class="text-gray-500 text-sm text-center py-8">No hay pedidos aún</p>
             </div>
           </div>
         </div>
 
-        <!-- Products Tab -->
+        <!-- ========== PRODUCTS TAB ========== -->
         <div id="content-products" class="hidden">
           <div
-            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6"
+            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 fade-up"
           >
-            <h2 class="text-xl font-bold">Mis Productos</h2>
+            <div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold mb-1">Mis <span class="text-blue-500">Productos</span></h2>
+              <p class="text-gray-400 text-sm">Gestioná tu inventario</p>
+            </div>
             <button
-              onclick="openModal()"
-              class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl flex items-center gap-2 transition-all"
+              onclick="openProductModal()"
+              class="btn-primary bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-xl flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)]"
             >
               <i data-lucide="plus" class="w-5 h-5"></i>
               Agregar producto
@@ -292,104 +605,76 @@
 
           <!-- Desktop Table -->
           <div
-            class="hidden md:block bg-gray-900 border border-gray-800 rounded-xl overflow-hidden"
+            class="hidden md:block glass rounded-xl overflow-hidden fade-up"
+            style="transition-delay: 0.1s"
           >
             <div class="overflow-x-auto">
               <table class="w-full">
-                <thead class="bg-gray-800/50">
+                <thead class="bg-gray-800/30 border-b border-gray-800">
                   <tr>
-                    <th
-                      class="text-left px-6 py-4 text-sm font-medium text-gray-400"
-                    >
-                      Producto
-                    </th>
-                    <th
-                      class="text-left px-6 py-4 text-sm font-medium text-gray-400"
-                    >
-                      Marca
-                    </th>
-                    <th
-                      class="text-left px-6 py-4 text-sm font-medium text-gray-400"
-                    >
-                      Categoría
-                    </th>
-                    <th
-                      class="text-left px-6 py-4 text-sm font-medium text-gray-400"
-                    >
-                      Precio
-                    </th>
-                    <th
-                      class="text-right px-6 py-4 text-sm font-medium text-gray-400"
-                    >
-                      Acciones
-                    </th>
+                    <th class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-400">Producto</th>
+                    <th class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-400">Marca</th>
+                    <th class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-400">Categoría</th>
+                    <th class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-400">Precio</th>
+                    <th class="text-right px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-400">Acciones</th>
                   </tr>
                 </thead>
-                <tbody
-                  id="products-table"
-                  class="divide-y divide-gray-800"
-                ></tbody>
+                <tbody id="products-table" class="divide-y divide-gray-800"></tbody>
               </table>
             </div>
-            <div id="empty-state" class="hidden text-center py-12">
-              <i
-                data-lucide="package-open"
-                class="w-16 h-16 mx-auto text-gray-600 mb-4"
-              ></i>
-              <p class="text-gray-400">No hay productos aún</p>
+            <div id="empty-state" class="hidden text-center py-16">
+              <i data-lucide="package-open" class="w-16 h-16 mx-auto text-gray-600 mb-4"></i>
+              <p class="text-gray-400 font-medium">No hay productos aún</p>
+              <p class="text-gray-500 text-sm mt-1">Agregá tu primer producto para empezar</p>
             </div>
           </div>
 
           <!-- Mobile Cards -->
           <div id="products-cards" class="md:hidden space-y-3"></div>
-          <div
-            id="empty-state-mobile"
-            class="md:hidden hidden text-center py-12"
-          >
-            <i
-              data-lucide="package-open"
-              class="w-16 h-16 mx-auto text-gray-600 mb-4"
-            ></i>
-            <p class="text-gray-400">No hay productos aún</p>
+          <div id="empty-state-mobile" class="md:hidden hidden text-center py-16">
+            <i data-lucide="package-open" class="w-16 h-16 mx-auto text-gray-600 mb-4"></i>
+            <p class="text-gray-400 font-medium">No hay productos aún</p>
+            <p class="text-gray-500 text-sm mt-1">Agregá tu primer producto para empezar</p>
           </div>
         </div>
 
-        <!-- Orders Tab -->
+        <!-- ========== ORDERS TAB ========== -->
         <div id="content-orders" class="hidden">
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
-            <h2 class="text-xl font-bold">Historial de Pedidos</h2>
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 fade-up">
+            <div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold mb-1">Historial de <span class="text-blue-500">Pedidos</span></h2>
+              <p class="text-gray-400 text-sm">Todos los pedidos recibidos</p>
+            </div>
             <button
               onclick="clearOrders()"
               class="bg-red-600/20 hover:bg-red-600 text-red-500 hover:text-white font-medium py-2 px-4 rounded-xl text-sm transition-all self-end sm:self-auto"
             >
+              <i data-lucide="trash-2" class="w-4 h-4 inline mr-1"></i>
               Limpiar pedidos
             </button>
           </div>
 
           <div id="orders-list" class="space-y-4">
-            <p class="text-gray-500 text-center py-8">
-              No hay pedidos registrados
-            </p>
+            <p class="text-gray-500 text-center py-12">No hay pedidos registrados</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Product Modal -->
+    <!-- ========== PRODUCT MODAL ========== -->
     <div
       id="product-modal"
-      class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+      class="modal-overlay hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
     >
-      <div
-        class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
-      >
-        <div
-          class="flex items-center justify-between p-6 border-b border-gray-800"
-        >
-          <h3 id="modal-title" class="text-xl font-bold">Agregar producto</h3>
+      <div class="modal-content bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div class="sticky top-0 bg-gray-900/95 backdrop-blur-md flex items-center justify-between p-6 border-b border-gray-800 z-10">
+          <h3 id="modal-title" class="text-xl font-bold flex items-center gap-2">
+            <i data-lucide="package-plus" class="w-5 h-5 text-blue-500"></i>
+            <span>Agregar producto</span>
+          </h3>
           <button
             onclick="closeModal()"
-            class="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+            class="action-btn p-2 hover:bg-gray-800 rounded-lg transition-colors"
           >
             <i data-lucide="x" class="w-6 h-6"></i>
           </button>
@@ -399,24 +684,20 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2"
-                >Nombre del producto *</label
-              >
+              <label class="block text-sm font-medium text-gray-300 mb-2">Nombre del producto *</label>
               <input
                 type="text"
                 id="product-name"
-                class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                class="input-field w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none"
                 required
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2"
-                >Marca *</label
-              >
+              <label class="block text-sm font-medium text-gray-300 mb-2">Marca *</label>
               <input
                 type="text"
                 id="product-brand"
-                class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                class="input-field w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none"
                 placeholder="Ej: JBL, Apple..."
                 list="brands-list"
                 required
@@ -426,37 +707,31 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2"
-              >Descripción *</label
-            >
+            <label class="block text-sm font-medium text-gray-300 mb-2">Descripción *</label>
             <textarea
               id="product-description"
               rows="3"
-              class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors resize-none"
+              class="input-field w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none resize-none"
               required
             ></textarea>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2"
-                >Precio ($) *</label
-              >
+              <label class="block text-sm font-medium text-gray-300 mb-2">Precio ($) *</label>
               <input
                 type="number"
                 id="product-price"
-                class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                class="input-field w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none"
                 min="0"
                 required
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2"
-                >Categoría *</label
-              >
+              <label class="block text-sm font-medium text-gray-300 mb-2">Categoría *</label>
               <select
                 id="product-category"
-                class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                class="input-field w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none"
                 required
               >
                 <option value="">Seleccionar...</option>
@@ -471,21 +746,16 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2"
-              >Imagen del producto *</label
-            >
+            <label class="block text-sm font-medium text-gray-300 mb-2">Imagen del producto *</label>
             <div class="flex items-center gap-4">
               <label
-                class="flex-1 flex flex-col items-center justify-center w-full h-32 bg-gray-800 border-2 border-dashed border-gray-700 rounded-xl cursor-pointer hover:border-blue-500 transition-colors"
+                class="upload-zone flex-1 flex flex-col items-center justify-center w-full h-32 bg-gray-800 border-2 border-dashed border-gray-700 rounded-xl cursor-pointer"
               >
                 <div
                   id="upload-placeholder"
                   class="flex flex-col items-center justify-center"
                 >
-                  <i
-                    data-lucide="upload-cloud"
-                    class="w-8 h-8 text-gray-500 mb-2"
-                  ></i>
+                  <i data-lucide="upload-cloud" class="w-8 h-8 text-gray-500 mb-2"></i>
                   <p class="text-sm text-gray-400">Click para subir imagen</p>
                   <p class="text-xs text-gray-600">PNG, JPG, SVG (max 2MB)</p>
                 </div>
@@ -503,7 +773,7 @@
             </div>
           </div>
 
-          <div class="flex gap-3 pt-4">
+          <div class="flex gap-3 pt-2">
             <button
               type="button"
               onclick="closeModal()"
@@ -513,44 +783,35 @@
             </button>
             <button
               type="submit"
-              class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all"
+              class="btn-primary flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)]"
             >
-              Guardar producto
+              <span class="flex items-center justify-center gap-2">
+                <i data-lucide="save" class="w-5 h-5"></i>
+                Guardar producto
+              </span>
             </button>
           </div>
         </form>
       </div>
     </div>
 
-    <!-- Delete Modal -->
+    <!-- ========== DELETE MODAL ========== -->
     <div
       id="delete-modal"
-      class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+      class="modal-overlay hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
     >
-      <div
-        class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-md p-6"
-      >
+      <div class="modal-content bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-md p-6">
         <div class="text-center">
-          <div
-            class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4"
-          >
+          <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4 anim-pulse-ring">
             <i data-lucide="trash-2" class="w-8 h-8 text-red-500"></i>
           </div>
           <h3 class="text-xl font-bold mb-2">Eliminar producto</h3>
-          <p class="text-gray-400 mb-6">
-            ¿Estás seguro? Esta acción no se puede deshacer.
-          </p>
+          <p class="text-gray-400 mb-6">¿Estás seguro? Esta acción no se puede deshacer.</p>
           <div class="flex gap-3">
-            <button
-              onclick="closeDeleteModal()"
-              class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-xl transition-colors"
-            >
+            <button onclick="closeDeleteModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
               Cancelar
             </button>
-            <button
-              onclick="confirmDelete()"
-              class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl transition-all"
-            >
+            <button onclick="confirmDelete()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl transition-all">
               Eliminar
             </button>
           </div>
@@ -558,77 +819,40 @@
       </div>
     </div>
 
-    <!-- Password Modal -->
+    <!-- ========== PASSWORD MODAL ========== -->
     <div
       id="password-modal"
-      class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+      class="modal-overlay hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
     >
-      <div
-        class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-md p-6"
-      >
+      <div class="modal-content bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-md p-6">
         <div class="text-center mb-6">
-          <div
-            class="w-16 h-16 bg-blue-600/20 rounded-full flex items-center justify-center mx-auto mb-4"
-          >
+          <div class="w-16 h-16 bg-blue-600/20 rounded-full flex items-center justify-center mx-auto mb-4 anim-float">
             <i data-lucide="key" class="w-8 h-8 text-blue-500"></i>
           </div>
           <h3 class="text-xl font-bold">Cambiar contraseña</h3>
         </div>
         <form id="password-form" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2"
-              >Contraseña actual</label
-            >
-            <input
-              type="password"
-              id="current-password"
-              class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
-              placeholder="••••••••"
-              required
-            />
+            <label class="block text-sm font-medium text-gray-300 mb-2">Contraseña actual</label>
+            <input type="password" id="current-password" class="input-field w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none" placeholder="••••••••" required />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2"
-              >Nueva contraseña</label
-            >
-            <input
-              type="password"
-              id="new-password"
-              class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
-              placeholder="••••••••"
-              required
-              minlength="4"
-            />
+            <label class="block text-sm font-medium text-gray-300 mb-2">Nueva contraseña</label>
+            <input type="password" id="new-password" class="input-field w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none" placeholder="••••••••" required minlength="4" />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2"
-              >Confirmar nueva contraseña</label
-            >
-            <input
-              type="password"
-              id="confirm-password"
-              class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
-              placeholder="••••••••"
-              required
-              minlength="4"
-            />
+            <label class="block text-sm font-medium text-gray-300 mb-2">Confirmar nueva contraseña</label>
+            <input type="password" id="confirm-password" class="input-field w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none" placeholder="••••••••" required minlength="4" />
           </div>
-          <p
-            id="password-error"
-            class="hidden text-red-400 text-sm text-center"
-          ></p>
+          <p id="password-error" class="hidden text-red-400 text-sm text-center flex items-center justify-center gap-2">
+            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+            <span></span>
+          </p>
           <div class="flex gap-3 pt-2">
-            <button
-              type="button"
-              onclick="closePasswordModal()"
-              class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-xl transition-colors"
-            >
+            <button type="button" onclick="closePasswordModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
               Cancelar
             </button>
-            <button
-              type="submit"
-              class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all"
-            >
+            <button type="submit" class="btn-primary flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all">
               Guardar
             </button>
           </div>
@@ -636,14 +860,14 @@
       </div>
     </div>
 
-    <!-- Delete Order Modal -->
+    <!-- ========== DELETE ORDER MODAL ========== -->
     <div
       id="delete-order-modal"
-      class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+      class="modal-overlay hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
     >
-      <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-md p-6">
+      <div class="modal-content bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-md p-6">
         <div class="text-center">
-          <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4 anim-pulse-ring">
             <i data-lucide="trash-2" class="w-8 h-8 text-red-500"></i>
           </div>
           <h3 class="text-xl font-bold mb-2">Eliminar pedido</h3>
@@ -656,14 +880,14 @@
       </div>
     </div>
 
-    <!-- Clear Orders Modal -->
+    <!-- ========== CLEAR ORDERS MODAL ========== -->
     <div
       id="clear-orders-modal"
-      class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+      class="modal-overlay hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
     >
-      <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-md p-6">
+      <div class="modal-content bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-md p-6">
         <div class="text-center">
-          <div class="w-16 h-16 bg-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div class="w-16 h-16 bg-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-4 anim-pulse-ring">
             <i data-lucide="alert-triangle" class="w-8 h-8 text-orange-500"></i>
           </div>
           <h3 class="text-xl font-bold mb-2">Limpiar pedidos</h3>
@@ -679,6 +903,9 @@
     <script>
       lucide.createIcons();
 
+      // Clear stale localStorage products (old data with placeholder images)
+      localStorage.removeItem('techzoneuy_products.json');
+
       const API_BASE = 'api';
       let products = [];
       let orders = [];
@@ -686,45 +913,144 @@
       let deletingProductId = null;
       let deletingOrderId = null;
 
+      // ========== TOAST ==========
       function showToast(message) {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
-        toast.className = 'pointer-events-auto bg-gray-900 border border-blue-500/50 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transform translate-y-2 opacity-0 transition-all duration-300';
+        toast.className = 'pointer-events-auto toast-enter bg-gray-900 border border-blue-500/50 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3';
         toast.innerHTML = `
-          <div class="w-6 h-6 bg-blue-600/20 rounded-full flex items-center justify-center text-blue-400">
+          <div class="w-6 h-6 bg-blue-600/20 rounded-full flex items-center justify-center text-blue-400 flex-shrink-0 anim-check-pop">
             <i data-lucide="check" class="w-4 h-4"></i>
           </div>
           <span class="text-sm font-medium">${message}</span>
         `;
         container.appendChild(toast);
         lucide.createIcons();
-        setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
-        setTimeout(() => { toast.classList.add('translate-y-2', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 3000);
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateX(20px)';
+          toast.style.transition = 'all 0.3s ease';
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
       }
 
       async function apiCall(endpoint, data = null) {
         const opts = data ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) } : {};
-        const res = await fetch(`${API_BASE}/${endpoint}`, opts);
-        return await res.json();
+        try {
+          const res = await fetch(`${API_BASE}/${endpoint}`, opts);
+          const ct = res.headers.get('content-type') || '';
+          if (!ct.includes('application/json')) throw new Error('not-json');
+          return await res.json();
+        } catch (err) {
+          // Fallback: lectura/escritura directa sobre data/*.json
+          return await localFallback(endpoint, data);
+        }
       }
 
-      // Login
+      async function localFallback(endpoint, data) {
+        const url = `data/${endpoint.includes('products') ? 'products.json' : endpoint.includes('orders') ? 'orders.json' : 'admin.json'}?_=${Date.now()}`;
+        const storageKey = 'techzoneuy_' + url.split('/').pop().split('?')[0];
+        if (!data) {
+          // GET: file is source of truth, localStorage only adds NEW products
+          let list = [];
+          try {
+            const res = await fetch(url, { cache: 'no-store' });
+            if (res.ok) list = await res.json();
+          } catch (e) {}
+          try {
+            const localList = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            if (localList.length > 0) {
+              const fileIds = new Set(list.map(p => p.id));
+              localList.forEach(p => {
+                if (!fileIds.has(p.id)) {
+                  list.push(p);
+                }
+              });
+            }
+          } catch (e) {}
+          return list;
+        }
+        // POST: leer, mutar y persistir via PHP si existe, sino via localStorage
+        let list = [];
+        try {
+          const res = await fetch(url, { cache: 'no-store' });
+          if (res.ok) list = await res.json();
+        } catch (e) {
+          list = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        }
+
+        const action = (endpoint.match(/action=(\w+)/) || [])[1];
+
+        if (endpoint.includes('products')) {
+          if (action === 'create') {
+            const maxId = list.reduce((m, p) => Math.max(m, p.id || 0), 0);
+            list.push({ ...data, id: maxId + 1, created_at: new Date().toISOString().slice(0, 19).replace('T', ' ') });
+          } else if (action === 'update') {
+            const i = list.findIndex(p => p.id == data.id);
+            if (i >= 0) list[i] = { ...list[i], ...data };
+          } else if (action === 'delete') {
+            list = list.filter(p => p.id != data.id);
+          }
+        } else if (endpoint.includes('orders')) {
+          if (action === 'update_status') {
+            const i = list.findIndex(o => o.id == data.id);
+            if (i >= 0) list[i].status = data.status;
+          } else if (action === 'delete') {
+            list = list.filter(o => o.id != data.id);
+          } else if (action === 'clear') {
+            list = [];
+          }
+        }
+
+        localStorage.setItem(storageKey, JSON.stringify(list));
+        return { success: true };
+      }
+
+      // ========== LOGIN ==========
+      const ADMIN_USER = 'admin';
+
+      async function getAdminCredentials() {
+        const cached = localStorage.getItem('techzoneuy_admin_creds');
+        if (cached) {
+          try {
+            const parsed = JSON.parse(cached);
+            if (parsed && parsed.password) return parsed;
+          } catch (e) {}
+        }
+        try {
+          const res = await fetch('data/admin.json?t=' + Date.now(), { cache: 'no-store' });
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.password) return data;
+          }
+        } catch (err) {}
+        return { username: 'admin', password: 'zonatech2026' };
+      }
+
+      function setAdminCredentialsCache(data) {
+        try {
+          localStorage.setItem('techzoneuy_admin_creds', JSON.stringify(data));
+        } catch (e) {}
+      }
+
       document.getElementById('login-form').addEventListener('submit', async function(e) {
         e.preventDefault();
         const username = document.getElementById('username-input').value;
         const password = document.getElementById('password-input').value;
-        try {
-          const result = await apiCall('login.php', { username, password });
-          if (result.success) {
-            localStorage.setItem('techzoneuy_admin', 'true');
-            localStorage.setItem('techzoneuy_user', result.username);
-            showAdminPanel();
-          } else {
-            document.getElementById('login-error').classList.remove('hidden');
-          }
-        } catch (err) {
-          document.getElementById('login-error').textContent = 'Error de conexión con el servidor';
-          document.getElementById('login-error').classList.remove('hidden');
+        const errorEl = document.getElementById('login-error');
+        const errorSpan = errorEl.querySelector('span');
+
+        const admin = await getAdminCredentials();
+
+        if (username === ADMIN_USER && password === (admin.password || 'zonatech2026')) {
+          localStorage.setItem('techzoneuy_admin', 'true');
+          localStorage.setItem('techzoneuy_user', username);
+          setAdminCredentialsCache(admin);
+          showAdminPanel();
+        } else {
+          errorSpan.textContent = 'Usuario o contraseña incorrectos';
+          errorEl.classList.remove('hidden');
+          errorEl.classList.add('flex');
         }
       });
 
@@ -735,6 +1061,7 @@
         await loadOrders();
         updateStats();
         updateBrandsList();
+        observeFadeElements();
       }
 
       function logout() {
@@ -746,14 +1073,35 @@
         showAdminPanel();
       }
 
+      // Auto-refresh
       setInterval(async () => {
-        if (localStorage.getItem('techzoneuy_admin') === 'true') {
+        if (localStorage.getItem('techzoneuy_admin') === 'true' && !document.getElementById('admin-panel').classList.contains('hidden')) {
           await loadOrders();
           await loadProducts();
           updateStats();
         }
-      }, 2000);
+      }, 3000);
 
+      // ========== OBSERVER ==========
+      function observeFadeElements() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+          });
+        }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+
+        document.querySelectorAll('.fade-up, .fade-in, .scale-in').forEach((el) => {
+          if (!el.classList.contains('visible')) observer.observe(el);
+        });
+
+        setTimeout(() => {
+          document.querySelectorAll('#content-dashboard > *').forEach((el) => {
+            el.classList.add('visible');
+          });
+        }, 100);
+      }
+
+      // ========== TABS ==========
       function showTab(tab) {
         ['dashboard', 'products', 'orders'].forEach(t => {
           document.getElementById('content-' + t).classList.add('hidden');
@@ -763,8 +1111,17 @@
         document.getElementById('content-' + tab).classList.remove('hidden');
         document.getElementById('tab-' + tab).classList.add('tab-active');
         document.getElementById('tab-' + tab).classList.remove('text-gray-400');
+
+        if (tab === 'dashboard' || tab === 'products') {
+          setTimeout(() => {
+            document.querySelectorAll('#content-' + tab + ' .fade-up').forEach((el) => {
+              el.classList.add('visible');
+            });
+          }, 50);
+        }
       }
 
+      // ========== LOADERS ==========
       async function loadProducts() {
         try {
           products = await apiCall('products.php?action=list');
@@ -785,35 +1142,64 @@
         }
       }
 
+      function pulseValue(el) {
+        el.classList.remove('pulse-value');
+        void el.offsetWidth;
+        el.classList.add('pulse-value');
+      }
+
       function updateStats() {
-        const deliveredOrders = orders.filter(o => o.status === 'completado');
-        const totalRevenue = deliveredOrders.reduce((sum, o) => sum + parseInt(o.total || 0), 0);
-        const totalItems = deliveredOrders.reduce((sum, o) => sum + (o.items || []).reduce((s, i) => s + i.quantity, 0), 0);
-        document.getElementById('stat-revenue').textContent = '$' + totalRevenue.toLocaleString('es-UY');
-        document.getElementById('stat-orders').textContent = orders.length;
-        document.getElementById('stat-products').textContent = products.length;
-        document.getElementById('stat-items-sold').textContent = totalItems;
+        const pending = orders.filter(o => o.status === 'pendiente').length;
+        const completed = orders.filter(o => o.status === 'completado').length;
+        const cancelled = orders.filter(o => o.status === 'cancelado').length;
+        const totalRevenue = orders.filter(o => o.status === 'completado').reduce((sum, o) => sum + parseInt(o.total || 0), 0);
+        const totalItems = orders.filter(o => o.status === 'completado').reduce((sum, o) => sum + (o.items || []).reduce((s, i) => s + i.quantity, 0), 0);
+
+        const updateEl = (id, value) => {
+          const el = document.getElementById(id);
+          if (el.textContent !== value) {
+            el.textContent = value;
+            pulseValue(el);
+          }
+        };
+
+        updateEl('stat-revenue', '$' + totalRevenue.toLocaleString('es-UY'));
+        updateEl('stat-orders', orders.length);
+        updateEl('stat-products', products.length);
+        updateEl('stat-items-sold', totalItems);
+        updateEl('stat-pending', pending);
+        updateEl('stat-completed', completed);
+        updateEl('stat-cancelled', cancelled);
+
+        const total = orders.length || 1;
+        document.getElementById('bar-pending').style.width = (pending / total * 100) + '%';
+        document.getElementById('bar-completed').style.width = (completed / total * 100) + '%';
+        document.getElementById('bar-cancelled').style.width = (cancelled / total * 100) + '%';
 
         const recentOrders = orders.slice(-5).reverse();
         const recentContainer = document.getElementById('recent-orders');
         if (recentOrders.length === 0) {
-          recentContainer.innerHTML = '<p class="text-gray-500 text-sm">No hay pedidos aún</p>';
+          recentContainer.innerHTML = `
+            <div class="text-center py-8">
+              <i data-lucide="inbox" class="w-12 h-12 mx-auto text-gray-600 mb-3"></i>
+              <p class="text-gray-500 text-sm">No hay pedidos aún</p>
+            </div>`;
         } else {
           const statusLabels = { pendiente: 'Pendiente', completado: 'Completado', cancelado: 'Cancelado' };
-          const statusColors = { pendiente: 'text-yellow-400', completado: 'text-green-400', cancelado: 'text-red-400' };
+          const statusColors = { pendiente: 'text-yellow-400 bg-yellow-500/10', completado: 'text-green-400 bg-green-500/10', cancelado: 'text-red-400 bg-red-500/10' };
           recentContainer.innerHTML = recentOrders.map(order => `
-            <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-green-600/20 rounded-lg flex items-center justify-center">
-                  <i data-lucide="check-circle" class="w-5 h-5 text-green-500"></i>
+            <div class="flex items-center justify-between p-3 bg-gray-800/40 rounded-lg hover:bg-gray-800/70 transition-all border border-transparent hover:border-blue-500/20">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="package" class="w-5 h-5 text-blue-400"></i>
                 </div>
-                <div>
-                  <p class="font-medium text-sm">${(order.items || []).map(i => i.name).join(', ') || 'Sin productos'}</p>
+                <div class="min-w-0">
+                  <p class="font-medium text-sm truncate">${(order.items || []).map(i => i.name).join(', ') || 'Sin productos'}</p>
                   <p class="text-gray-500 text-xs">${new Date(order.created_at).toLocaleString('es-UY')}</p>
                 </div>
               </div>
-              <div class="flex items-center gap-3">
-                <span class="${statusColors[order.status] || 'text-yellow-400'} text-xs font-medium">${statusLabels[order.status] || order.status}</span>
+              <div class="flex items-center gap-3 flex-shrink-0">
+                <span class="${statusColors[order.status] || statusColors.pendiente} text-xs font-bold px-2 py-1 rounded">${statusLabels[order.status] || order.status}</span>
                 <span class="font-bold text-green-400">$${parseInt(order.total || 0).toLocaleString('es-UY')}</span>
               </div>
             </div>
@@ -822,6 +1208,7 @@
         lucide.createIcons();
       }
 
+      // ========== PRODUCTS ==========
       function renderProducts() {
         const tbody = document.getElementById('products-table');
         const emptyState = document.getElementById('empty-state');
@@ -840,8 +1227,8 @@
         emptyStateMobile.classList.add('hidden');
         const categoryNames = { airpods: 'AirPods', auriculares: 'Auriculares', parlantes: 'Parlantes', fundas: 'Fundas', cargadores: 'Cargadores', accesorios: 'Accesorios' };
 
-        tbody.innerHTML = products.map(product => `
-          <tr class="hover:bg-gray-800/50 transition-colors">
+        tbody.innerHTML = products.map((product, i) => `
+          <tr class="table-row anim-row-enter" style="animation-delay: ${i * 0.05}s">
             <td class="px-6 py-4">
               <div class="flex items-center gap-3">
                 <img src="${product.image}" class="w-12 h-12 rounded-lg object-cover bg-gray-800" onerror="this.src='https://placehold.co/48x48/1a1a2e/ffffff?text=IMG'">
@@ -856,15 +1243,19 @@
             <td class="px-6 py-4"><span class="font-bold text-green-400">$${product.price.toLocaleString('es-UY')}</span></td>
             <td class="px-6 py-4">
               <div class="flex items-center justify-end gap-2">
-                <button onclick="editProduct(${product.id})" class="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-white"><i data-lucide="pencil" class="w-4 h-4"></i></button>
-                <button onclick="openDeleteModal(${product.id})" class="p-2 hover:bg-red-500/20 rounded-lg transition-colors text-gray-400 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                <button onclick="editProduct(${product.id})" class="action-btn p-2 hover:bg-blue-500/20 rounded-lg transition-colors text-gray-400 hover:text-blue-400">
+                  <i data-lucide="pencil" class="w-4 h-4"></i>
+                </button>
+                <button onclick="openDeleteModal(${product.id})" class="action-btn p-2 hover:bg-red-500/20 rounded-lg transition-colors text-gray-400 hover:text-red-500">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
               </div>
             </td>
           </tr>
         `).join('');
 
-        cardsContainer.innerHTML = products.map(product => `
-          <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 flex gap-4">
+        cardsContainer.innerHTML = products.map((product, i) => `
+          <div class="order-card glass rounded-xl p-4 flex gap-4 anim-row-enter" style="animation-delay: ${i * 0.05}s">
             <img src="${product.image}" class="w-20 h-20 rounded-lg object-cover bg-gray-800 flex-shrink-0" onerror="this.src='https://placehold.co/80x80/1a1a2e/ffffff?text=IMG'">
             <div class="flex-1 min-w-0">
               <div class="flex items-start justify-between gap-2">
@@ -873,8 +1264,12 @@
                   <p class="text-gray-500 text-xs truncate">${product.description}</p>
                 </div>
                 <div class="flex gap-1 flex-shrink-0">
-                  <button onclick="editProduct(${product.id})" class="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-white"><i data-lucide="pencil" class="w-4 h-4"></i></button>
-                  <button onclick="openDeleteModal(${product.id})" class="p-2 hover:bg-red-500/20 rounded-lg transition-colors text-gray-400 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                  <button onclick="editProduct(${product.id})" class="action-btn p-2 hover:bg-blue-500/20 rounded-lg transition-colors text-gray-400 hover:text-blue-400">
+                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                  </button>
+                  <button onclick="openDeleteModal(${product.id})" class="action-btn p-2 hover:bg-red-500/20 rounded-lg transition-colors text-gray-400 hover:text-red-500">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </button>
                 </div>
               </div>
               <div class="flex items-center gap-2 mt-2">
@@ -893,35 +1288,44 @@
         document.getElementById('brands-list').innerHTML = brands.map(b => `<option value="${b}">`).join('');
       }
 
+      // ========== ORDERS ==========
       function renderOrders() {
         const container = document.getElementById('orders-list');
         if (orders.length === 0) {
-          container.innerHTML = '<p class="text-gray-500 text-center py-8">No hay pedidos registrados</p>';
+          container.innerHTML = `
+            <div class="text-center py-16">
+              <i data-lucide="inbox" class="w-16 h-16 mx-auto text-gray-600 mb-4"></i>
+              <p class="text-gray-400 font-medium">No hay pedidos registrados</p>
+            </div>`;
+          lucide.createIcons();
           return;
         }
 
         const statusLabels = { pendiente: 'Pendiente', completado: 'Completado', cancelado: 'Cancelado' };
         const statusColors = { pendiente: 'bg-yellow-600/20 text-yellow-400', completado: 'bg-green-600/20 text-green-400', cancelado: 'bg-red-600/20 text-red-400' };
 
-        container.innerHTML = orders.map((order, idx) => `
-          <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6 hover:border-gray-700 transition-colors">
+        container.innerHTML = orders.map((order) => `
+          <div class="order-card glass rounded-xl p-4 sm:p-6">
             <div class="flex flex-col gap-3 mb-4">
               <div class="flex items-center justify-between gap-2">
                 <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
-                  <span class="bg-green-600/20 text-green-400 px-2.5 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-bold">#${order.id}</span>
+                  <span class="bg-blue-600/20 text-blue-400 px-2.5 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-bold">#${order.id}</span>
                   <span class="${statusColors[order.status] || statusColors.pendiente} px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-bold">${statusLabels[order.status] || order.status}</span>
                 </div>
                 <span class="text-lg sm:text-xl font-black text-green-400">$${parseInt(order.total || 0).toLocaleString('es-UY')}</span>
               </div>
               <div class="flex items-center justify-between gap-2">
-                <span class="text-gray-500 text-xs sm:text-sm">${new Date(order.created_at).toLocaleString('es-UY')}</span>
+                <span class="text-gray-500 text-xs sm:text-sm flex items-center gap-1">
+                  <i data-lucide="clock" class="w-3 h-3"></i>
+                  ${new Date(order.created_at).toLocaleString('es-UY')}
+                </span>
                 <div class="flex items-center gap-2">
-                  <select onchange="updateOrderStatus(${order.id}, this.value)" class="bg-gray-800 border border-gray-700 text-white text-xs rounded-lg px-2 sm:px-3 py-1.5 focus:outline-none focus:border-blue-500">
+                  <select onchange="updateOrderStatus(${order.id}, this.value)" class="input-field bg-gray-800 border border-gray-700 text-white text-xs rounded-lg px-2 sm:px-3 py-1.5 focus:outline-none">
                     <option value="pendiente" ${order.status === 'pendiente' ? 'selected' : ''}>⏳ Pendiente</option>
                     <option value="completado" ${order.status === 'completado' ? 'selected' : ''}>✅ Completado</option>
                     <option value="cancelado" ${order.status === 'cancelado' ? 'selected' : ''}>❌ Cancelado</option>
                   </select>
-                  <button onclick="deleteOrder(${order.id})" class="p-2 hover:bg-red-500/20 rounded-lg transition-colors text-gray-400 hover:text-red-500" title="Eliminar pedido">
+                  <button onclick="deleteOrder(${order.id})" class="action-btn p-2 hover:bg-red-500/20 rounded-lg transition-colors text-gray-400 hover:text-red-500" title="Eliminar pedido">
                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                   </button>
                 </div>
@@ -945,17 +1349,24 @@
         await apiCall('orders.php?action=update_status', { id, status });
         await loadOrders();
         updateStats();
+        showToast('Estado actualizado');
       }
 
-      async function clearOrders() {
-        document.getElementById('clear-orders-modal').classList.remove('hidden');
-        lucide.createIcons();
+      // ========== MODAL CONTROLS ==========
+      function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.add('active'), 10);
       }
 
-      function closeClearOrdersModal() {
-        document.getElementById('clear-orders-modal').classList.add('hidden');
+      function closeModalFn(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.remove('active');
+        setTimeout(() => modal.classList.add('hidden'), 300);
       }
 
+      async function clearOrders() { openModal('clear-orders-modal'); }
+      function closeClearOrdersModal() { closeModalFn('clear-orders-modal'); }
       async function confirmClearOrders() {
         await apiCall('orders.php?action=clear');
         await loadOrders();
@@ -966,15 +1377,9 @@
 
       async function deleteOrder(id) {
         deletingOrderId = id;
-        document.getElementById('delete-order-modal').classList.remove('hidden');
-        lucide.createIcons();
+        openModal('delete-order-modal');
       }
-
-      function closeDeleteOrderModal() {
-        document.getElementById('delete-order-modal').classList.add('hidden');
-        deletingOrderId = null;
-      }
-
+      function closeDeleteOrderModal() { closeModalFn('delete-order-modal'); deletingOrderId = null; }
       async function confirmDeleteOrder() {
         if (deletingOrderId) {
           await apiCall('orders.php?action=delete', { id: deletingOrderId });
@@ -986,15 +1391,11 @@
       }
 
       function changePassword() {
-        document.getElementById('password-modal').classList.remove('hidden');
+        openModal('password-modal');
         document.getElementById('password-error').classList.add('hidden');
         document.getElementById('password-form').reset();
-        lucide.createIcons();
       }
-
-      function closePasswordModal() {
-        document.getElementById('password-modal').classList.add('hidden');
-      }
+      function closePasswordModal() { closeModalFn('password-modal'); }
 
       document.getElementById('password-form').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -1002,40 +1403,47 @@
         const newPass = document.getElementById('new-password').value;
         const confirmPass = document.getElementById('confirm-password').value;
         const errorEl = document.getElementById('password-error');
+        const errorSpan = errorEl.querySelector('span');
 
         if (newPass.length < 4) {
-          errorEl.textContent = 'La contraseña debe tener al menos 4 caracteres';
+          errorSpan.textContent = 'La contraseña debe tener al menos 4 caracteres';
           errorEl.classList.remove('hidden');
+          errorEl.classList.add('flex');
           return;
         }
         if (newPass !== confirmPass) {
-          errorEl.textContent = 'Las contraseñas no coinciden';
+          errorSpan.textContent = 'Las contraseñas no coinciden';
           errorEl.classList.remove('hidden');
+          errorEl.classList.add('flex');
           return;
         }
 
         try {
           const result = await apiCall('change-password.php', { current_password: current, new_password: newPass });
           if (result.success) {
+            setAdminCredentialsCache({ username: ADMIN_USER, password: newPass });
             closePasswordModal();
             showToast('Contraseña cambiada correctamente');
           } else {
-            errorEl.textContent = result.message || 'Error al cambiar contraseña';
+            errorSpan.textContent = result.message || 'Error al cambiar contraseña';
             errorEl.classList.remove('hidden');
+            errorEl.classList.add('flex');
           }
         } catch (err) {
-          errorEl.textContent = 'Error de conexión';
+          errorSpan.textContent = 'Error de conexión';
           errorEl.classList.remove('hidden');
+          errorEl.classList.add('flex');
         }
       });
 
+      // ========== PRODUCT FORM ==========
       let currentImageData = null;
 
-      function openModal(productId = null) {
+      function openProductModal(productId = null) {
         editingProductId = productId;
         currentImageData = null;
         const form = document.getElementById('product-form');
-        document.getElementById('modal-title').textContent = productId ? 'Editar producto' : 'Agregar producto';
+        document.getElementById('modal-title').querySelector('span').textContent = productId ? 'Editar producto' : 'Agregar producto';
         form.reset();
         document.getElementById('image-preview').classList.add('hidden');
         document.getElementById('upload-placeholder').classList.remove('hidden');
@@ -1057,15 +1465,16 @@
             }
           }
         }
-        document.getElementById('product-modal').classList.remove('hidden');
+        openModal('product-modal');
         lucide.createIcons();
       }
+      function closeModal() { closeModalFn('product-modal'); editingProductId = null; }
 
       document.getElementById('product-image').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
           if (file.size > 2 * 1024 * 1024) {
-            alert('La imagen no puede superar 2MB');
+            showToast('La imagen no puede superar 2MB');
             return;
           }
           const reader = new FileReader();
@@ -1079,18 +1488,12 @@
         }
       });
 
-      function closeModal() {
-        document.getElementById('product-modal').classList.add('hidden');
-        editingProductId = null;
-      }
-
-      function editProduct(id) { openModal(id); }
+      function editProduct(id) { openProductModal(id); }
 
       document.getElementById('product-form').addEventListener('submit', async function(e) {
         e.preventDefault();
-
         if (!currentImageData) {
-          alert('Por favor subí una imagen del producto');
+          showToast('Por favor subí una imagen del producto');
           return;
         }
 
@@ -1117,20 +1520,15 @@
           updateStats();
           updateBrandsList();
         } catch (err) {
-          alert('Error al guardar el producto');
+          showToast('Error al guardar el producto');
         }
       });
 
       function openDeleteModal(id) {
         deletingProductId = id;
-        document.getElementById('delete-modal').classList.remove('hidden');
-        lucide.createIcons();
+        openModal('delete-modal');
       }
-
-      function closeDeleteModal() {
-        document.getElementById('delete-modal').classList.add('hidden');
-        deletingProductId = null;
-      }
+      function closeDeleteModal() { closeModalFn('delete-modal'); deletingProductId = null; }
 
       async function confirmDelete() {
         if (deletingProductId) {

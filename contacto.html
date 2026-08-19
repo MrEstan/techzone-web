@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contacto | TECHZONEUY</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+      :root {
+        --color-bg: #000;
+        --color-fg: #fff;
+        --color-blue-400: #60a5fa;
+        --color-blue-500: #3b82f6;
+        --color-blue-600: #2563eb;
+        --color-blue-700: #1d4ed8;
+      }
+      * { font-family: "Inter", sans-serif; }
+      body {
+        background-color: var(--color-bg);
+        color: var(--color-fg);
+        overflow-x: hidden;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #111; }
+      ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: var(--color-blue-600); }
+
+      /* ============ ANIMATIONS ============ */
+      @keyframes blob {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+      }
+      @keyframes fade-up {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .anim-blob { animation: blob 8s ease-in-out infinite; }
+
+      /* Reveal animations */
+      .fade-up {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .fade-up.visible { opacity: 1; transform: translateY(0); }
+      .scale-in {
+        opacity: 0;
+        transform: scale(0.85);
+        transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .scale-in.visible { opacity: 1; transform: scale(1); }
+
+      /* ============ COMPONENTS ============ */
+      .glass {
+        background: rgba(17, 24, 39, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .section-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--color-blue-600), transparent);
+        opacity: 0.4;
+      }
+
+      .stat-card {
+        transition: all 0.4s ease;
+      }
+      .stat-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--color-blue-500);
+      }
+
+      /* ============ NAVBAR ENHANCED ============ */
+      .nav-link {
+        position: relative;
+        transition: color 0.3s ease;
+        padding: 4px 0;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--color-blue-400), var(--color-blue-600));
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        transform: translateX(-50%);
+        border-radius: 2px;
+      }
+      .nav-link:hover { color: var(--color-blue-400); }
+      .nav-link:hover::after,
+      .nav-link.active::after { width: 100%; }
+      .nav-link.active { color: var(--color-blue-500); }
+
+      .nav-link.active::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: var(--color-blue-500);
+        border-radius: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 0 10px var(--color-blue-500);
+        animation: dot-pulse 2s ease-in-out infinite;
+      }
+      @keyframes dot-pulse {
+        0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+        50% { opacity: 0.6; transform: translateX(-50%) scale(1.4); }
+      }
+
+      @keyframes logo-glow {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        50% { box-shadow: 0 0 20px 2px rgba(37, 99, 235, 0.4); }
+      }
+      .logo-glow {
+        border-radius: 50%;
+        animation: logo-glow 3s ease-in-out infinite;
+      }
+
+      .nav-icon-btn {
+        position: relative;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .nav-icon-btn:hover {
+        transform: translateY(-2px) scale(1.1);
+      }
+      .nav-icon-btn::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--color-blue-500);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+      .nav-icon-btn:hover::after { width: 70%; }
+
+      .mobile-link { position: relative; overflow: hidden; }
+      .mobile-link::before {
+        content: "";
+        position: absolute;
+        left: 0; top: 0;
+        width: 3px;
+        height: 100%;
+        background: var(--color-blue-500);
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+      }
+      .mobile-link:hover::before,
+      .mobile-link.active::before { transform: scaleY(1); }
+
+      @keyframes shimmer-text {
+        0% { background-position: -200% center; }
+        100% { background-position: 200% center; }
+      }
+      .brand-text {
+        background: linear-gradient(90deg, #fff 0%, var(--color-blue-400) 50%, #fff 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer-text 4s linear infinite;
+      }
+
+      .navbar-scrolled {
+        background: rgba(0, 0, 0, 0.92) !important;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .menu-toggle-icon {
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .menu-toggle-active .menu-toggle-icon {
+        transform: rotate(180deg);
+      }
+
+      .btn-primary {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+      .btn-primary::before {
+        content: "";
+        position: absolute;
+        top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
+        transition: left 0.6s ease;
+      }
+      .btn-primary:hover::before { left: 100%; }
+
+      .social-card {
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .social-card:hover {
+        transform: translateY(-6px);
+        border-color: var(--color-blue-500);
+        box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.25);
+      }
+      .social-card:hover .social-icon { transform: scale(1.15) rotate(-6deg); }
+      .social-icon {
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              blue: {
+                400: "#60a5fa",
+                500: "#3b82f6",
+                600: "#2563eb",
+                700: "#1d4ed8",
+              },
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="selection:bg-blue-600 selection:text-white antialiased">
+    <!-- Navbar -->
+    <nav
+      id="navbar"
+      class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-transparent transition-all duration-500"
+    >
+      <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16 sm:h-20">
+          <a href="index.html" class="flex-shrink-0 flex items-center gap-2 group">
+            <div class="relative">
+              <img
+                src="img/logo.png"
+                alt="TECHZONEUY"
+                class="logo-glow w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110 relative z-10"
+              />
+              <div class="absolute inset-0 rounded-full bg-blue-500/0 group-hover:bg-blue-500/20 blur-md transition-all duration-500"></div>
+            </div>
+            <div class="hidden sm:block">
+              <span class="brand-text text-lg sm:text-xl font-bold tracking-[0.2em] uppercase"
+                >TECH<span class="text-blue-500" style="-webkit-text-fill-color: #3b82f6;">ZONE</span></span
+              >
+            </div>
+          </a>
+
+          <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
+            <a href="index.html" class="nav-link text-gray-300 font-medium text-sm lg:text-base flex items-center gap-1.5">
+              <i data-lucide="home" class="w-4 h-4 opacity-70"></i> Inicio
+            </a>
+            <a href="index.html#features" class="nav-link text-gray-300 font-medium text-sm lg:text-base flex items-center gap-1.5">
+              <i data-lucide="sparkles" class="w-4 h-4 opacity-70"></i> Features
+            </a>
+            <a href="index.html#categorias" class="nav-link text-gray-300 font-medium text-sm lg:text-base flex items-center gap-1.5">
+              <i data-lucide="layout-grid" class="w-4 h-4 opacity-70"></i> Categorías
+            </a>
+            <a href="catalogo.html" class="nav-link text-gray-300 font-medium text-sm lg:text-base flex items-center gap-1.5">
+              <i data-lucide="package" class="w-4 h-4 opacity-70"></i> Catálogo
+            </a>
+            <a href="contacto.html" class="nav-link active font-medium text-sm lg:text-base flex items-center gap-1.5">
+              <i data-lucide="mail" class="w-4 h-4 opacity-70"></i> Contacto
+            </a>
+          </div>
+
+          <div class="flex items-center gap-1 sm:gap-2">
+            <button id="mobile-menu-btn" class="nav-icon-btn md:hidden p-2 text-gray-300 hover:text-white" aria-label="Menu">
+              <i data-lucide="menu" id="menu-icon" class="menu-toggle-icon w-5 h-5 sm:w-6 sm:h-6"></i>
+              <i data-lucide="x" id="close-icon" class="menu-toggle-icon w-5 h-5 sm:w-6 sm:h-6 hidden"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="mobile-menu" class="hidden md:hidden bg-gray-900/95 backdrop-blur-xl border-b border-gray-800 absolute w-full left-0 shadow-2xl">
+        <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+        <div class="px-4 pt-3 pb-6 space-y-1">
+          <a href="index.html" class="mobile-link block px-4 py-3 text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-3">
+            <i data-lucide="home" class="w-4 h-4"></i> Inicio
+          </a>
+          <a href="index.html#features" class="mobile-link block px-4 py-3 text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-3">
+            <i data-lucide="sparkles" class="w-4 h-4"></i> Features
+          </a>
+          <a href="index.html#categorias" class="mobile-link block px-4 py-3 text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-3">
+            <i data-lucide="layout-grid" class="w-4 h-4"></i> Categorías
+          </a>
+          <a href="catalogo.html" class="mobile-link block px-4 py-3 text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-3">
+            <i data-lucide="package" class="w-4 h-4"></i> Catálogo
+          </a>
+          <a href="contacto.html" class="mobile-link active block px-4 py-3 text-base font-medium text-blue-400 bg-blue-600/10 rounded-lg flex items-center gap-3">
+            <i data-lucide="mail" class="w-4 h-4"></i> Contacto
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="pt-16 sm:pt-20">
+      <!-- Hero -->
+      <section class="relative bg-gradient-to-br from-black via-gray-900 to-black py-12 sm:py-16 overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none anim-blob"></div>
+        <div class="absolute bottom-0 right-0 w-80 h-80 bg-blue-900/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div class="text-center mb-10 sm:mb-12 fade-up">
+            <span class="inline-block px-4 py-1 mb-4 text-xs font-bold tracking-widest uppercase text-blue-400 bg-blue-500/10 rounded-full border border-blue-500/20">Contacto</span>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-3 sm:mb-4">
+              Hablemos
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">ahora</span>
+            </h1>
+            <p class="text-gray-400 text-sm sm:text-base max-w-xl mx-auto">
+              Estamos para ayudarte. Escribinos por el canal que prefieras y te respondemos rápido.
+            </p>
+          </div>
+
+          <!-- Contacto cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-10 sm:mb-12">
+            <a
+              href="https://api.whatsapp.com/send?phone=59892486156&text=Hola!%20Vi%20su%20cat%C3%A1logo%20y%20quer%C3%ADa%20hacerles%20una%20consulta."
+              target="_blank"
+              class="stat-card glass rounded-2xl p-6 flex flex-col items-start fade-up"
+              style="transition-delay: 0.05s"
+            >
+              <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center mb-4">
+                <i data-lucide="message-circle" class="w-6 h-6 text-green-500"></i>
+              </div>
+              <h3 class="text-lg font-bold mb-1">WhatsApp</h3>
+              <p class="text-gray-400 text-sm mb-3">Respuesta inmediata, todos los días.</p>
+              <span class="text-blue-400 font-semibold text-sm">+598 92 486 156</span>
+            </a>
+
+            <a
+              href="tel:+59892486156"
+              class="stat-card glass rounded-2xl p-6 flex flex-col items-start fade-up"
+              style="transition-delay: 0.1s"
+            >
+              <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4">
+                <i data-lucide="phone" class="w-6 h-6 text-blue-500"></i>
+              </div>
+              <h3 class="text-lg font-bold mb-1">Teléfono</h3>
+              <p class="text-gray-400 text-sm mb-3">Llamanos directo para una atención personalizada.</p>
+              <span class="text-blue-400 font-semibold text-sm">+598 92 486 156</span>
+            </a>
+
+            <a
+              href="mailto:contacto@techzoneuy.uy"
+              class="stat-card glass rounded-2xl p-6 flex flex-col items-start fade-up"
+              style="transition-delay: 0.15s"
+            >
+              <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4">
+                <i data-lucide="mail" class="w-6 h-6 text-blue-500"></i>
+              </div>
+              <h3 class="text-lg font-bold mb-1">Email</h3>
+              <p class="text-gray-400 text-sm mb-3">Para consultas formales o presupuestos.</p>
+              <span class="text-blue-400 font-semibold text-sm break-all">contacto@techzoneuy.uy</span>
+            </a>
+
+            <div
+              class="stat-card glass rounded-2xl p-6 flex flex-col items-start fade-up"
+              style="transition-delay: 0.2s"
+            >
+              <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4">
+                <i data-lucide="map-pin" class="w-6 h-6 text-blue-500"></i>
+              </div>
+              <h3 class="text-lg font-bold mb-1">Ubicación</h3>
+              <p class="text-gray-400 text-sm mb-3">Coordiná retiro en persona.</p>
+              <span class="text-blue-400 font-semibold text-sm">Uruguay · Santa Lucía</span>
+            </div>
+
+            <div
+              class="stat-card glass rounded-2xl p-6 flex flex-col items-start fade-up"
+              style="transition-delay: 0.25s"
+            >
+              <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4">
+                <i data-lucide="clock" class="w-6 h-6 text-blue-500"></i>
+              </div>
+              <h3 class="text-lg font-bold mb-1">Horarios</h3>
+              <p class="text-gray-400 text-sm mb-3">Atención y respuestas:</p>
+              <span class="text-blue-400 font-semibold text-sm">Lun a Sáb · 9 a 20 hs</span>
+            </div>
+
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=Santa+Luc%C3%ADa%2C+Uruguay"
+              target="_blank"
+              class="stat-card glass rounded-2xl p-6 flex flex-col items-start fade-up"
+              style="transition-delay: 0.3s"
+            >
+              <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4">
+                <i data-lucide="navigation" class="w-6 h-6 text-blue-500"></i>
+              </div>
+              <h3 class="text-lg font-bold mb-1">Cómo llegar</h3>
+              <p class="text-gray-400 text-sm mb-3">Abrir ubicación en Google Maps.</p>
+              <span class="text-blue-400 font-semibold text-sm">Ver mapa →</span>
+            </a>
+          </div>
+
+          <div class="section-divider max-w-5xl mx-auto mb-10 sm:mb-12"></div>
+
+          <!-- Redes sociales -->
+          <div class="text-center mb-8 fade-up">
+            <h2 class="text-2xl sm:text-3xl font-extrabold mb-2">
+              Seguinos en
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">redes</span>
+            </h2>
+            <p class="text-gray-400 text-sm sm:text-base max-w-md mx-auto">
+              Novedades, ofertas y los productos que van llegando.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
+            <a
+              href="https://instagram.com/techzoneuy"
+              target="_blank"
+              rel="noopener"
+              class="social-card glass rounded-2xl p-6 flex flex-col items-center text-center fade-up"
+              style="transition-delay: 0.05s"
+            >
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500 via-fuchsia-500 to-purple-600 flex items-center justify-center mb-4 social-icon">
+                <i data-lucide="instagram" class="w-7 h-7 text-white"></i>
+              </div>
+              <h3 class="text-lg font-bold mb-1">Instagram</h3>
+              <p class="text-gray-400 text-xs sm:text-sm mb-2">@techzoneuy</p>
+              <span class="text-blue-400 font-semibold text-xs">Ver perfil →</span>
+            </a>
+
+            <a
+              href="https://facebook.com/techzoneuy"
+              target="_blank"
+              rel="noopener"
+              class="social-card glass rounded-2xl p-6 flex flex-col items-center text-center fade-up"
+              style="transition-delay: 0.15s"
+            >
+              <div class="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center mb-4 social-icon">
+                <i data-lucide="facebook" class="w-7 h-7 text-white"></i>
+              </div>
+              <h3 class="text-lg font-bold mb-1">Facebook</h3>
+              <p class="text-gray-400 text-xs sm:text-sm mb-2">/techzoneuy</p>
+              <span class="text-blue-400 font-semibold text-xs">Ver página →</span>
+            </a>
+
+            <a
+              href="https://twitter.com/techzoneuy"
+              target="_blank"
+              rel="noopener"
+              class="social-card glass rounded-2xl p-6 flex flex-col items-center text-center fade-up"
+              style="transition-delay: 0.25s"
+            >
+              <div class="w-14 h-14 rounded-2xl bg-black border border-gray-700 flex items-center justify-center mb-4 social-icon">
+                <i data-lucide="twitter" class="w-7 h-7 text-white"></i>
+              </div>
+              <h3 class="text-lg font-bold mb-1">X (Twitter)</h3>
+              <p class="text-gray-400 text-xs sm:text-sm mb-2">@techzoneuy</p>
+              <span class="text-blue-400 font-semibold text-xs">Ver perfil →</span>
+            </a>
+          </div>
+
+          <!-- CTA final -->
+          <div class="mt-12 sm:mt-16 text-center fade-up">
+            <a
+              href="https://api.whatsapp.com/send?phone=59892486156&text=Hola!%20Quiero%20asesoramiento%20sobre%20un%20producto."
+              target="_blank"
+              class="btn-primary inline-flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <i data-lucide="message-circle" class="w-5 h-5"></i>
+              Escribinos por WhatsApp
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-gray-900 pt-8 sm:pt-10 pb-6 sm:pb-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs sm:text-sm text-gray-500">
+          <div class="flex items-center gap-2">
+            <img src="img/logo.png" alt="TECHZONEUY" class="w-7 h-7 rounded-full object-cover" />
+            <span class="font-bold tracking-[0.2em] uppercase">TECH<span class="text-blue-600">ZONE</span></span>
+          </div>
+          <p>
+            &copy; 2026 TechZone UY. Todos los derechos reservados.
+            <a href="contacto.html" class="text-gray-400 hover:text-blue-500 transition-colors">Contacto</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      lucide.createIcons();
+
+      // Mobile menu
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const menuIcon = document.getElementById("menu-icon");
+      const closeIcon = document.getElementById("close-icon");
+      const mobileLinks = document.querySelectorAll(".mobile-link");
+
+      function toggleMenu() {
+        const isHidden = mobileMenu.classList.contains("hidden");
+        mobileMenu.classList.toggle("hidden");
+        menuIcon.classList.toggle("hidden");
+        closeIcon.classList.toggle("hidden");
+        mobileMenuBtn.classList.toggle("menu-toggle-active", !isHidden);
+      }
+      mobileMenuBtn.addEventListener("click", toggleMenu);
+      mobileLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          if (!mobileMenu.classList.contains("hidden")) toggleMenu();
+        });
+      });
+
+      // Navbar scroll
+      const navbar = document.getElementById("navbar");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 30) {
+          navbar.classList.add("navbar-scrolled", "border-gray-800/60");
+          navbar.classList.remove("border-transparent");
+        } else {
+          navbar.classList.remove("navbar-scrolled", "border-gray-800/60");
+          navbar.classList.add("border-transparent");
+        }
+      });
+
+      // Reveal animations
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add("visible");
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -60px 0px" });
+
+      document.querySelectorAll(".fade-up, .scale-in").forEach((el) => observer.observe(el));
+
+      setTimeout(() => {
+        document.querySelectorAll("main > section:first-of-type .fade-up").forEach((el) => {
+          el.classList.add("visible");
+        });
+      }, 100);
+    </script>
+  </body>
+</html>

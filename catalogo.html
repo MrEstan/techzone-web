@@ -8,164 +8,219 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
-      * {
-        font-family: "Inter", sans-serif;
+      :root {
+        --color-bg: #000;
+        --color-fg: #fff;
+        --color-blue-400: #60a5fa;
+        --color-blue-500: #3b82f6;
+        --color-blue-600: #2563eb;
+        --color-blue-700: #1d4ed8;
       }
+      * { font-family: "Inter", sans-serif; }
       body {
-        background-color: #000;
-        color: #fff;
-      }
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #111;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #333;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #2563eb;
+        background-color: var(--color-bg);
+        color: var(--color-fg);
+        overflow-x: hidden;
       }
 
-      /* Animaciones */
-      .fade-up {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: all 0.6s ease-out;
-      }
-      .fade-up.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      .fade-in {
-        opacity: 0;
-        transition: opacity 0.6s ease-out;
-      }
-      .fade-in.visible {
-        opacity: 1;
-      }
-      .scale-in {
-        opacity: 0;
-        transform: scale(0.9);
-        transition: all 0.5s ease-out;
-      }
-      .scale-in.visible {
-        opacity: 1;
-        transform: scale(1);
-      }
-      .slide-right {
-        opacity: 0;
-        transform: translateX(-30px);
-        transition: all 0.6s ease-out;
-      }
-      .slide-right.visible {
-        opacity: 1;
-        transform: translateX(0);
-      }
-      .slide-left {
-        opacity: 0;
-        transform: translateX(30px);
-        transition: all 0.6s ease-out;
-      }
-      .slide-left.visible {
-        opacity: 1;
-        transform: translateX(0);
-      }
+      /* Scrollbar */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #111; }
+      ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: var(--color-blue-600); }
 
-      /* Efecto glow en hover */
-      .glow-hover {
-        transition: all 0.3s ease;
-      }
-      .glow-hover:hover {
-        box-shadow: 0 0 30px rgba(37, 99, 235, 0.3);
-      }
-
-      /* Filtro activo animado */
-      .category-btn {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      .category-btn:active {
-        transform: scale(0.95);
-      }
-
-      /* Card hover effect */
-      .product-card {
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      .product-card:hover {
-        transform: translateY(-8px);
-      }
-
-      /* Imágenes de productos */
-      .product-img {
-        filter: brightness(1.05);
-      }
-
-      /* Cart badge bounce */
-      @keyframes bounce-in {
-        0% {
-          transform: scale(0);
-        }
-        50% {
-          transform: scale(1.3);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
-      .cart-bounce {
-        animation: bounce-in 0.4s ease;
-      }
-
-      /* Floating animation for hero */
+      /* ============ ANIMATIONS ============ */
       @keyframes float {
-        0%,
-        100% {
-          transform: translateY(0);
-        }
-        50% {
-          transform: translateY(-10px);
-        }
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
       }
-      .float {
-        animation: float 3s ease-in-out infinite;
+      @keyframes glow-pulse {
+        0%, 100% { box-shadow: 0 0 20px rgba(37, 99, 235, 0.4); }
+        50% { box-shadow: 0 0 40px rgba(37, 99, 235, 0.8); }
       }
-
-      /* Pulse animation */
-      @keyframes pulse-blue {
-        0%,
-        100% {
-          box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4);
-        }
-        50% {
-          box-shadow: 0 0 0 10px rgba(37, 99, 235, 0);
-        }
+      @keyframes gradient-shift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
       }
-      .pulse-blue {
-        animation: pulse-blue 2s infinite;
+      @keyframes pulse-ring {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(37, 99, 235, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
       }
-
-      /* Shimmer loading effect */
+      @keyframes blob {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+      }
+      @keyframes shine {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(200%); }
+      }
+      @keyframes fade-up {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes bounce-in {
+        0% { opacity: 0; transform: scale(0.3); }
+        50% { opacity: 1; transform: scale(1.05); }
+        70% { transform: scale(0.9); }
+        100% { transform: scale(1); }
+      }
       @keyframes shimmer {
-        0% {
-          background-position: -200% 0;
-        }
-        100% {
-          background-position: 200% 0;
-        }
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
       }
-      .shimmer {
-        background: linear-gradient(
-          90deg,
-          #1a1a2e 25%,
-          #2a2a4e 50%,
-          #1a1a2e 75%
-        );
+      @keyframes card-glow {
+        0%, 100% { box-shadow: 0 0 0 rgba(37, 99, 235, 0); }
+        50% { box-shadow: 0 0 25px rgba(37, 99, 235, 0.3); }
+      }
+      @keyframes slide-up-stagger {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .anim-gradient {
+        background-size: 200% 200%;
+        animation: gradient-shift 6s ease infinite;
+      }
+      .anim-blob { animation: blob 8s ease-in-out infinite; }
+      .anim-bounce-in { animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+      .anim-card-glow:hover { animation: card-glow 2s ease-in-out infinite; }
+
+      .shimmer-loading {
+        background: linear-gradient(90deg, #1a1a2e 25%, #2a2a4e 50%, #1a1a2e 75%);
         background-size: 200% 100%;
         animation: shimmer 1.5s infinite;
       }
+
+      /* Reveal animations */
+      .fade-up {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .fade-up.visible { opacity: 1; transform: translateY(0); }
+      .fade-in {
+        opacity: 0;
+        transition: opacity 0.8s ease-out;
+      }
+      .fade-in.visible { opacity: 1; }
+      .scale-in {
+        opacity: 0;
+        transform: scale(0.85);
+        transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .scale-in.visible { opacity: 1; transform: scale(1); }
+      .slide-right {
+        opacity: 0;
+        transform: translateX(-40px);
+        transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .slide-right.visible { opacity: 1; transform: translateX(0); }
+      .slide-left {
+        opacity: 0;
+        transform: translateX(40px);
+        transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .slide-left.visible { opacity: 1; transform: translateX(0); }
+
+      /* ============ COMPONENTS ============ */
+      .nav-link {
+        position: relative;
+        transition: color 0.3s ease;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--color-blue-500);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+      .nav-link:hover::after,
+      .nav-link.active::after { width: 100%; }
+
+      .btn-primary {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+      .btn-primary::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
+        transition: left 0.6s ease;
+      }
+      .btn-primary:hover::before { left: 100%; }
+
+      .glass {
+        background: rgba(17, 24, 39, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      /* Filtros */
+      .category-btn {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .category-btn:active { transform: scale(0.95); }
+
+      /* Product card */
+      .product-card {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .product-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(37, 99, 235, 0.08), transparent);
+        transition: left 0.8s ease;
+        pointer-events: none;
+      }
+      .product-card:hover::before { left: 100%; }
+      .product-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--color-blue-500);
+        box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.25);
+      }
+      .product-card:hover .product-img { transform: scale(1.1) rotate(-2deg); }
+      .product-card:hover .quick-add { opacity: 1; transform: translateY(0); }
+
+      .product-img {
+        filter: brightness(1.05);
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .quick-add {
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+      }
+
+      /* Cart badge */
+      @keyframes bounce-in {
+        0% { transform: scale(0); }
+        50% { transform: scale(1.3); }
+        100% { transform: scale(1); }
+      }
+      .cart-bounce { animation: bounce-in 0.4s ease; }
+
+      /* Pulse WhatsApp */
+      .pulse-whatsapp { animation: pulse-ring 2s infinite; }
 
       /* Cart Sidebar */
       .cart-overlay {
@@ -173,29 +228,182 @@
         visibility: hidden;
         transition: all 0.3s ease;
       }
-      .cart-overlay.active {
-        opacity: 1;
-        visibility: visible;
-      }
+      .cart-overlay.active { opacity: 1; visibility: visible; }
       .cart-sidebar {
         transform: translateX(100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      .cart-sidebar.active {
-        transform: translateX(0);
-      }
-      .cart-item {
-        animation: slideIn 0.3s ease;
-      }
+      .cart-sidebar.active { transform: translateX(0); }
+      .cart-item { animation: slideIn 0.3s ease; }
       @keyframes slideIn {
-        from {
-          opacity: 0;
-          transform: translateX(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+
+      /* Search bar */
+      .search-input:focus {
+        border-color: var(--color-blue-500);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+      }
+
+      .section-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--color-blue-600), transparent);
+        opacity: 0.4;
+      }
+
+      /* Stat card hover */
+      .stat-card {
+        transition: all 0.4s ease;
+      }
+      .stat-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--color-blue-500);
+      }
+
+      /* ============ NAVBAR ENHANCED ============ */
+      /* Animated underline (gradient that slides) */
+      .nav-link {
+        position: relative;
+        transition: color 0.3s ease;
+        padding: 4px 0;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--color-blue-400), var(--color-blue-600));
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        transform: translateX(-50%);
+        border-radius: 2px;
+      }
+      .nav-link:hover {
+        color: var(--color-blue-400);
+      }
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+      .nav-link.active {
+        color: var(--color-blue-500);
+      }
+
+      /* Glow dot indicator on active link */
+      .nav-link.active::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: var(--color-blue-500);
+        border-radius: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 0 10px var(--color-blue-500);
+        animation: dot-pulse 2s ease-in-out infinite;
+      }
+      @keyframes dot-pulse {
+        0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+        50% { opacity: 0.6; transform: translateX(-50%) scale(1.4); }
+      }
+
+      /* Logo pulse glow */
+      @keyframes logo-glow {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        50% { box-shadow: 0 0 20px 2px rgba(37, 99, 235, 0.4); }
+      }
+      .logo-glow {
+        border-radius: 50%;
+        animation: logo-glow 3s ease-in-out infinite;
+      }
+
+      /* Cart icon badge pop */
+      @keyframes cart-badge-pop {
+        0% { transform: scale(0); }
+        50% { transform: scale(1.4); }
+        100% { transform: scale(1); }
+      }
+
+      /* Search button in navbar */
+      .nav-icon-btn {
+        position: relative;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .nav-icon-btn:hover {
+        transform: translateY(-2px) scale(1.1);
+      }
+      .nav-icon-btn::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--color-blue-500);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+      .nav-icon-btn:hover::after {
+        width: 70%;
+      }
+
+      /* Mobile menu link enhanced */
+      .mobile-link {
+        position: relative;
+        overflow: hidden;
+      }
+      .mobile-link::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 3px;
+        height: 100%;
+        background: var(--color-blue-500);
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+      }
+      .mobile-link:hover::before,
+      .mobile-link.active::before {
+        transform: scaleY(1);
+      }
+
+      /* Shimmer text effect on brand */
+      @keyframes shimmer-text {
+        0% { background-position: -200% center; }
+        100% { background-position: 200% center; }
+      }
+      .brand-text {
+        background: linear-gradient(90deg, #fff 0%, var(--color-blue-400) 50%, #fff 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer-text 4s linear infinite;
+      }
+
+      /* Navbar background gradient on scroll */
+      .navbar-scrolled {
+        background: rgba(0, 0, 0, 0.92) !important;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Cart counter micro animation */
+      @keyframes counter-bump {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+      }
+      .counter-bump { animation: counter-bump 0.3s ease; }
+
+      /* Icon rotation on hover for menu */
+      .menu-toggle-icon {
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .menu-toggle-active .menu-toggle-icon {
+        transform: rotate(180deg);
       }
     </style>
     <script>
@@ -218,176 +426,248 @@
   <body class="selection:bg-blue-600 selection:text-white antialiased">
     <!-- Navbar -->
     <nav
-      class="fixed w-full z-50 bg-black/90 backdrop-blur-md border-b border-gray-800"
+      id="navbar"
+      class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-transparent transition-all duration-500"
     >
+      <!-- Top decorative line -->
+      <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16 sm:h-20">
+          <!-- Logo -->
           <a
             href="index.html"
             class="flex-shrink-0 flex items-center gap-2 group"
           >
-            <img
-              src="img/logo.png"
-              alt="TECHZONEUY"
-              class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover transition-transform duration-300 group-hover:rotate-12"
-            />
+            <div class="relative">
+              <img
+                src="img/logo.png"
+                alt="TECHZONEUY"
+                class="logo-glow w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110 relative z-10"
+              />
+              <div class="absolute inset-0 rounded-full bg-blue-500/0 group-hover:bg-blue-500/20 blur-md transition-all duration-500"></div>
+            </div>
             <div class="hidden sm:block">
-              <span
-                class="text-lg sm:text-xl font-bold tracking-[0.2em] uppercase"
-                >TECH<span class="text-blue-600">ZONE</span></span
+              <span class="brand-text text-lg sm:text-xl font-bold tracking-[0.2em] uppercase"
+                >TECH<span class="text-blue-500" style="-webkit-text-fill-color: #3b82f6;">ZONE</span></span
               >
             </div>
           </a>
+
+          <!-- Desktop nav links -->
           <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
             <a
               href="index.html"
-              class="text-gray-300 hover:text-blue-500 transition-colors font-medium text-sm lg:text-base"
-              >Inicio</a
+              class="nav-link text-gray-300 font-medium text-sm lg:text-base flex items-center gap-1.5"
             >
+              <i data-lucide="home" class="w-4 h-4 opacity-70"></i>
+              Inicio
+            </a>
             <a
-              href="catalogo.html"
-              class="text-blue-500 font-medium text-sm lg:text-base"
-              >Catálogo</a
+              href="index.html#features"
+              class="nav-link text-gray-300 font-medium text-sm lg:text-base flex items-center gap-1.5"
             >
+              <i data-lucide="sparkles" class="w-4 h-4 opacity-70"></i>
+              Features
+            </a>
             <a
-              href="#contacto"
-              class="text-gray-300 hover:text-blue-500 transition-colors font-medium text-sm lg:text-base"
-              >Contacto</a
+              href="index.html#categorias"
+              class="nav-link text-gray-300 font-medium text-sm lg:text-base flex items-center gap-1.5"
             >
+              <i data-lucide="layout-grid" class="w-4 h-4 opacity-70"></i>
+              Categorías
+            </a>
+            <a
+              href="#filtro"
+              class="nav-link active font-medium text-sm lg:text-base flex items-center gap-1.5"
+            >
+              <i data-lucide="package" class="w-4 h-4 opacity-70"></i>
+              Catálogo
+            </a>
+            <a
+              href="contacto.html"
+              class="nav-link text-gray-300 font-medium text-sm lg:text-base flex items-center gap-1.5"
+            >
+              <i data-lucide="mail" class="w-4 h-4 opacity-70"></i>
+              Contacto
+            </a>
           </div>
-          <div class="flex items-center gap-3 sm:gap-4">
+
+          <!-- Right side actions -->
+          <div class="flex items-center gap-1 sm:gap-2">
+            <!-- Search shortcut (desktop) -->
             <button
-              class="relative p-2 text-gray-300 hover:text-blue-500 transition-colors"
+              onclick="document.getElementById('search-input').focus(); window.scrollTo({top: 200, behavior: 'smooth'});"
+              class="nav-icon-btn hidden lg:flex p-2 text-gray-300 hover:text-blue-400"
+              aria-label="Buscar"
+            >
+              <i data-lucide="search" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Cart -->
+            <button
+              class="nav-icon-btn relative p-2 text-gray-300 hover:text-blue-400"
               onclick="openCart()"
+              aria-label="Carrito"
             >
               <i data-lucide="shopping-cart" class="w-5 h-5 sm:w-6 sm:h-6"></i>
               <span
                 id="cart-badge"
-                class="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden cart-bounce"
+                class="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden"
+                style="animation: cart-badge-pop 0.4s ease;"
                 >0</span
               >
             </button>
+
+            <!-- Mobile menu button -->
             <button
               id="mobile-menu-btn"
-              class="md:hidden p-2 text-gray-300 hover:text-white transition-colors"
+              class="nav-icon-btn md:hidden p-2 text-gray-300 hover:text-white"
               aria-label="Menu"
             >
-              <i
-                data-lucide="menu"
-                id="menu-icon"
-                class="w-5 h-5 sm:w-6 sm:h-6"
-              ></i>
-              <i
-                data-lucide="x"
-                id="close-icon"
-                class="w-5 h-5 sm:w-6 sm:h-6 hidden"
-              ></i>
+              <i data-lucide="menu" id="menu-icon" class="menu-toggle-icon w-5 h-5 sm:w-6 sm:h-6"></i>
+              <i data-lucide="x" id="close-icon" class="menu-toggle-icon w-5 h-5 sm:w-6 sm:h-6 hidden"></i>
             </button>
           </div>
         </div>
       </div>
+
       <!-- Mobile Menu -->
       <div
         id="mobile-menu"
-        class="hidden md:hidden bg-gray-900 border-b border-gray-800 absolute w-full left-0 shadow-xl"
+        class="hidden md:hidden bg-gray-900/95 backdrop-blur-xl border-b border-gray-800 absolute w-full left-0 shadow-2xl"
       >
-        <div class="px-4 pt-2 pb-6 space-y-1">
+        <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+        <div class="px-4 pt-3 pb-6 space-y-1">
           <a
             href="index.html"
-            class="mobile-link block px-4 py-3 text-base font-medium text-gray-300 hover:text-blue-500 hover:bg-gray-800 rounded-lg transition-all"
-            >Inicio</a
+            class="mobile-link block px-4 py-3 text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-3"
           >
+            <i data-lucide="home" class="w-4 h-4"></i>
+            Inicio
+          </a>
           <a
-            href="catalogo.html"
-            class="mobile-link block px-4 py-3 text-base font-medium text-blue-500 bg-blue-600/10 rounded-lg"
-            >Catálogo</a
+            href="index.html#features"
+            class="mobile-link block px-4 py-3 text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-3"
           >
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            Features
+          </a>
           <a
-            href="#contacto"
-            class="mobile-link block px-4 py-3 text-base font-medium text-gray-300 hover:text-blue-500 hover:bg-gray-800 rounded-lg transition-all"
-            >Contacto</a
+            href="index.html#categorias"
+            class="mobile-link block px-4 py-3 text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-3"
           >
+            <i data-lucide="layout-grid" class="w-4 h-4"></i>
+            Categorías
+          </a>
+          <a
+            href="#filtro"
+            class="mobile-link active block px-4 py-3 text-base font-medium text-blue-400 bg-blue-600/10 rounded-lg flex items-center gap-3"
+          >
+            <i data-lucide="package" class="w-4 h-4"></i>
+            Catálogo
+          </a>
+          <a
+            href="contacto.html"
+            class="mobile-link block px-4 py-3 text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-3"
+          >
+            <i data-lucide="mail" class="w-4 h-4"></i>
+            Contacto
+          </a>
         </div>
       </div>
     </nav>
 
     <main class="pt-16 sm:pt-20">
-      <!-- Header Section -->
+      <!-- Hero Section -->
       <section
-        class="py-8 sm:py-12 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden"
+        id="filtro"
+        class="relative bg-gradient-to-br from-black via-gray-900 to-black py-12 sm:py-16 overflow-hidden"
       >
-        <div
-          class="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"
-        ></div>
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none anim-blob"></div>
+        <div class="absolute bottom-0 right-0 w-80 h-80 bg-blue-900/20 rounded-full blur-3xl pointer-events-none"></div>
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div class="text-center mb-6 sm:mb-8 fade-up">
+          <div class="text-center mb-8 sm:mb-10 fade-up">
+            <span class="inline-block px-4 py-1 mb-4 text-xs font-bold tracking-widest uppercase text-blue-400 bg-blue-500/10 rounded-full border border-blue-500/20">Catálogo 2026</span>
             <h1
-              class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-2 sm:mb-3"
+              class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-3 sm:mb-4"
             >
-              Catálogo
+              Nuestros <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600 anim-gradient">productos</span>
             </h1>
             <p
-              class="text-gray-400 text-sm sm:text-base"
+              class="text-gray-400 text-sm sm:text-base max-w-xl mx-auto"
               id="products-subtitle"
             >
               Todos los productos disponibles.
             </p>
           </div>
 
+          <!-- Search -->
+          <div class="max-w-md mx-auto mb-8 fade-up" style="transition-delay: 0.1s">
+            <div class="relative">
+              <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500"></i>
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Buscar producto..."
+                class="search-input w-full bg-gray-900/80 border border-gray-700 rounded-full pl-12 pr-4 py-3 text-white focus:outline-none transition-all"
+                oninput="handleSearch(this.value)"
+              />
+            </div>
+          </div>
+
           <!-- Filtros -->
           <div
-            class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-10 fade-up"
-            style="transition-delay: 0.1s"
+            class="flex flex-wrap justify-center gap-2 sm:gap-3 fade-up"
+            style="transition-delay: 0.2s"
           >
             <button
               onclick="filterProducts('all')"
               class="category-btn px-4 sm:px-5 py-2 rounded-full border border-gray-700 text-xs sm:text-sm font-medium text-gray-300 hover:border-blue-500 hover:text-white transition-all bg-blue-600 border-blue-600 text-white active:scale-95"
               data-category="all"
-            >
-              Todos
-            </button>
+            >Todos</button>
             <button
               onclick="filterProducts('airpods')"
               class="category-btn px-4 sm:px-5 py-2 rounded-full border border-gray-700 text-xs sm:text-sm font-medium text-gray-300 hover:border-blue-500 hover:text-white transition-all active:scale-95"
               data-category="airpods"
-            >
-              AirPods
-            </button>
+            >AirPods</button>
             <button
               onclick="filterProducts('auriculares')"
               class="category-btn px-4 sm:px-5 py-2 rounded-full border border-gray-700 text-xs sm:text-sm font-medium text-gray-300 hover:border-blue-500 hover:text-white transition-all active:scale-95"
               data-category="auriculares"
-            >
-              Auriculares
-            </button>
+            >Auriculares</button>
             <button
               onclick="filterProducts('parlantes')"
               class="category-btn px-4 sm:px-5 py-2 rounded-full border border-gray-700 text-xs sm:text-sm font-medium text-gray-300 hover:border-blue-500 hover:text-white transition-all active:scale-95"
               data-category="parlantes"
-            >
-              Parlantes
-            </button>
+            >Parlantes</button>
             <button
               onclick="filterProducts('fundas')"
               class="category-btn px-4 sm:px-5 py-2 rounded-full border border-gray-700 text-xs sm:text-sm font-medium text-gray-300 hover:border-blue-500 hover:text-white transition-all active:scale-95"
               data-category="fundas"
-            >
-              Fundas
-            </button>
+            >Fundas</button>
             <button
               onclick="filterProducts('cargadores')"
               class="category-btn px-4 sm:px-5 py-2 rounded-full border border-gray-700 text-xs sm:text-sm font-medium text-gray-300 hover:border-blue-500 hover:text-white transition-all active:scale-95"
               data-category="cargadores"
-            >
-              Cargadores
-            </button>
+            >Cargadores</button>
           </div>
         </div>
       </section>
 
+      <div class="section-divider max-w-5xl mx-auto"></div>
+
       <!-- Products Grid -->
-      <section class="pb-12 sm:pb-20">
+      <section class="pb-12 sm:pb-20 pt-8 sm:pt-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <!-- Counter -->
+          <div class="flex items-center justify-between mb-6 fade-up">
+            <p class="text-sm text-gray-400">
+              Mostrando <span id="product-count" class="text-blue-500 font-bold">0</span> productos
+            </p>
+          </div>
+
           <div
             id="products-grid"
             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
@@ -395,7 +675,8 @@
             <!-- AIRPODS -->
             <div
               data-category="airpods"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              data-name="airpods pro"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
             >
               <div
                 class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
@@ -403,33 +684,34 @@
                 <img
                   src="img/airpods-pro.png"
                   alt="AirPods Pro"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
+                  class="product-img object-contain w-full h-full transition-transform duration-500"
                 />
                 <div
                   class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-gray-700/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white"
-                >
-                  APPLE
+                >APPLE</div>
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button
+                    onclick="addToCart(event, 'AirPods Pro', 2000)"
+                    class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90"
+                    aria-label="Vista rápida"
+                  >
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
                 </div>
               </div>
               <div class="p-4 sm:p-5 flex flex-col flex-grow">
                 <h3 class="text-base sm:text-lg font-bold mb-1">AirPods Pro</h3>
                 <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Disfrutá de un sonido de alta calidad con cancelación activa
-                  de ruido, ajuste cómodo y experiencia inalámbrica ideal.
+                  Disfrutá de un sonido de alta calidad con cancelación activa de ruido, ajuste cómodo y experiencia inalámbrica ideal.
                 </p>
                 <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$2000</span
-                  >
+                  <span class="text-xl sm:text-2xl font-black text-white">$2000</span>
                   <button
                     onclick="addToCart(event, 'AirPods Pro', 2000)"
                     class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
                     aria-label="Agregar al carrito"
                   >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
                   </button>
                 </div>
               </div>
@@ -437,44 +719,26 @@
 
             <div
               data-category="airpods"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
-              style="transition-delay: 0.1s"
+              data-name="airpods 4 anc"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              style="transition-delay: 0.05s"
             >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/airpods-4-anc.png"
-                  alt="AirPods 4 ANC"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
-                <div
-                  class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-gray-700/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white"
-                >
-                  APPLE
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/airpods-4-anc.png" alt="AirPods 4 ANC" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-gray-700/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white">APPLE</div>
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'AirPods 4 ANC', 2000)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
                 </div>
               </div>
               <div class="p-4 sm:p-5 flex flex-col flex-grow">
-                <h3 class="text-base sm:text-lg font-bold mb-1">
-                  AirPods 4 (ANC)
-                </h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Los nuevos AirPods 4 con Cancelación Activa de Ruido (ANC)
-                  ofrecen un sonido más profundo y detallado.
-                </p>
+                <h3 class="text-base sm:text-lg font-bold mb-1">AirPods 4 (ANC)</h3>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Los nuevos AirPods 4 con Cancelación Activa de Ruido (ANC) ofrecen un sonido más profundo y detallado.</p>
                 <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$2000</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'AirPods 4 ANC', 2000)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
+                  <span class="text-xl sm:text-2xl font-black text-white">$2000</span>
+                  <button onclick="addToCart(event, 'AirPods 4 ANC', 2000)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
                   </button>
                 </div>
               </div>
@@ -482,42 +746,26 @@
 
             <div
               data-category="airpods"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
-              style="transition-delay: 0.2s"
+              data-name="airpods max"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              style="transition-delay: 0.1s"
             >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/airpods-max.png"
-                  alt="AirPods Max"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
-                <div
-                  class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-gray-700/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white"
-                >
-                  APPLE
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/airpods-max.png" alt="AirPods Max" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-gray-700/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white">APPLE</div>
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'AirPods Max', 2200)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
                 </div>
               </div>
               <div class="p-4 sm:p-5 flex flex-col flex-grow">
                 <h3 class="text-base sm:text-lg font-bold mb-1">AirPods Max</h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Los AirPods Max ofrecen un sonido potente y nítido, con un
-                  diseño cómodo y elegante.
-                </p>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Los AirPods Max ofrecen un sonido potente y nítido, con un diseño cómodo y elegante.</p>
                 <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$2200</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'AirPods Max', 2200)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
+                  <span class="text-xl sm:text-2xl font-black text-white">$2200</span>
+                  <button onclick="addToCart(event, 'AirPods Max', 2200)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
                   </button>
                 </div>
               </div>
@@ -526,43 +774,26 @@
             <!-- AURICULARES JBL -->
             <div
               data-category="auriculares"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              data-name="jbl tune 760"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              style="transition-delay: 0.15s"
             >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/jbl-tune-760.png"
-                  alt="JBL TUNE 760"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
-                <div
-                  class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-orange-600/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white"
-                >
-                  JBL
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/jbl-tune-760.png" alt="JBL TUNE 760" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-orange-600/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white">JBL</div>
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'JBL TUNE 760', 1800)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
                 </div>
               </div>
               <div class="p-4 sm:p-5 flex flex-col flex-grow">
-                <h3 class="text-base sm:text-lg font-bold mb-1">
-                  JBL TUNE 760
-                </h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Auriculares inalámbricos con JBL Pure Bass, cancelación activa
-                  de ruido, Bluetooth y micrófono.
-                </p>
+                <h3 class="text-base sm:text-lg font-bold mb-1">JBL TUNE 760</h3>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Auriculares inalámbricos con JBL Pure Bass, cancelación activa de ruido, Bluetooth y micrófono.</p>
                 <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$1800</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'JBL TUNE 760', 1800)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
+                  <span class="text-xl sm:text-2xl font-black text-white">$1800</span>
+                  <button onclick="addToCart(event, 'JBL TUNE 760', 1800)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
                   </button>
                 </div>
               </div>
@@ -570,89 +801,53 @@
 
             <div
               data-category="auriculares"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
-              style="transition-delay: 0.1s"
-            >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/jbl-wave-300.png"
-                  alt="JBL WAVE 300tws"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
-                <div
-                  class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-orange-600/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white"
-                >
-                  JBL
-                </div>
-              </div>
-              <div class="p-4 sm:p-5 flex flex-col flex-grow">
-                <h3 class="text-base sm:text-lg font-bold mb-1">
-                  JBL WAVE 300tws
-                </h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Auriculares inalámbricos con JBL Deep Bass, Bluetooth,
-                  micrófono integrado. Ideales para el día a día.
-                </p>
-                <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$1000</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'JBL WAVE 300tws', 1000)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div
-              data-category="auriculares"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              data-name="jbl wave 300tws"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
               style="transition-delay: 0.2s"
             >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/jbl-tune-220.png"
-                  alt="JBL TUNE 220"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
-                <div
-                  class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-orange-600/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white"
-                >
-                  JBL
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/jbl-wave-300.png" alt="JBL WAVE 300tws" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-orange-600/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white">JBL</div>
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'JBL WAVE 300tws', 1000)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
                 </div>
               </div>
               <div class="p-4 sm:p-5 flex flex-col flex-grow">
-                <h3 class="text-base sm:text-lg font-bold mb-1">
-                  JBL TUNE 220
-                </h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Auriculares inalámbricos con JBL Pure Bass, Bluetooth,
-                  micrófono y diseño cómodo y liviano.
-                </p>
+                <h3 class="text-base sm:text-lg font-bold mb-1">JBL WAVE 300tws</h3>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Auriculares inalámbricos con JBL Deep Bass, Bluetooth, micrófono integrado. Ideales para el día a día.</p>
                 <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$1400</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'JBL TUNE 220', 1400)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
+                  <span class="text-xl sm:text-2xl font-black text-white">$1000</span>
+                  <button onclick="addToCart(event, 'JBL WAVE 300tws', 1000)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              data-category="auriculares"
+              data-name="jbl tune 220"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              style="transition-delay: 0.25s"
+            >
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/jbl-tune-220.png" alt="JBL TUNE 220" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-orange-600/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white">JBL</div>
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'JBL TUNE 220', 1400)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="p-4 sm:p-5 flex flex-col flex-grow">
+                <h3 class="text-base sm:text-lg font-bold mb-1">JBL TUNE 220</h3>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Auriculares inalámbricos con JBL Pure Bass, Bluetooth, micrófono y diseño cómodo y liviano.</p>
+                <div class="mt-auto pt-3 flex items-center justify-between">
+                  <span class="text-xl sm:text-2xl font-black text-white">$1400</span>
+                  <button onclick="addToCart(event, 'JBL TUNE 220', 1400)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
                   </button>
                 </div>
               </div>
@@ -661,41 +856,26 @@
             <!-- PARLANTES JBL -->
             <div
               data-category="parlantes"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              data-name="jbl flip 6"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              style="transition-delay: 0.05s"
             >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/jbl-flip-6.png"
-                  alt="JBL FLIP 6"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
-                <div
-                  class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-orange-600/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white"
-                >
-                  JBL
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/jbl-flip-6.png" alt="JBL FLIP 6" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-orange-600/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white">JBL</div>
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'JBL FLIP 6', 2000)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
                 </div>
               </div>
               <div class="p-4 sm:p-5 flex flex-col flex-grow">
                 <h3 class="text-base sm:text-lg font-bold mb-1">JBL FLIP 6</h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Parlante Bluetooth portátil con sonido potente, resistencia al
-                  agua y batería de larga duración.
-                </p>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Parlante Bluetooth portátil con sonido potente, resistencia al agua y batería de larga duración.</p>
                 <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$2000</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'JBL FLIP 6', 2000)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
+                  <span class="text-xl sm:text-2xl font-black text-white">$2000</span>
+                  <button onclick="addToCart(event, 'JBL FLIP 6', 2000)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
                   </button>
                 </div>
               </div>
@@ -703,44 +883,26 @@
 
             <div
               data-category="parlantes"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              data-name="jbl charge 5"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
               style="transition-delay: 0.1s"
             >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/jbl-charge-5.png"
-                  alt="JBL Charge 5"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
-                <div
-                  class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-orange-600/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white"
-                >
-                  JBL
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/jbl-charge-5.png" alt="JBL Charge 5" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-orange-600/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white">JBL</div>
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'JBL Charge 5', 2200)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
                 </div>
               </div>
               <div class="p-4 sm:p-5 flex flex-col flex-grow">
-                <h3 class="text-base sm:text-lg font-bold mb-1">
-                  JBL Charge 5
-                </h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Parlante Bluetooth portátil con sonido potente, resistencia al
-                  agua. Ideal para fiestas y viajes.
-                </p>
+                <h3 class="text-base sm:text-lg font-bold mb-1">JBL Charge 5</h3>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Parlante Bluetooth portátil con sonido potente, resistencia al agua. Ideal para fiestas y viajes.</p>
                 <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$2200</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'JBL Charge 5', 2200)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
+                  <span class="text-xl sm:text-2xl font-black text-white">$2200</span>
+                  <button onclick="addToCart(event, 'JBL Charge 5', 2200)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
                   </button>
                 </div>
               </div>
@@ -748,42 +910,26 @@
 
             <div
               data-category="parlantes"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
-              style="transition-delay: 0.2s"
+              data-name="jbl go 3"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              style="transition-delay: 0.15s"
             >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/jbl-go-3.png"
-                  alt="JBL GO 3"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
-                <div
-                  class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-orange-600/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white"
-                >
-                  JBL
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/jbl-go-3.png" alt="JBL GO 3" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-orange-600/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white">JBL</div>
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'JBL GO 3', 800)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
                 </div>
               </div>
               <div class="p-4 sm:p-5 flex flex-col flex-grow">
                 <h3 class="text-base sm:text-lg font-bold mb-1">JBL GO 3</h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Parlante Bluetooth compacto con sonido potente, resistente al
-                  agua. Ideal para llevar a cualquier lugar.
-                </p>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Parlante Bluetooth compacto con sonido potente, resistente al agua. Ideal para llevar a cualquier lugar.</p>
                 <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$800</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'JBL GO 3', 800)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
+                  <span class="text-xl sm:text-2xl font-black text-white">$800</span>
+                  <button onclick="addToCart(event, 'JBL GO 3', 800)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
                   </button>
                 </div>
               </div>
@@ -792,118 +938,25 @@
             <!-- FUNDAS Y TEMPLADOS -->
             <div
               data-category="fundas"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
-            >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/funda-magsafe-colores.png"
-                  alt="Funda MagSafe de Colores"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
-              </div>
-              <div class="p-4 sm:p-5 flex flex-col flex-grow">
-                <h3 class="text-base sm:text-lg font-bold mb-1">
-                  Funda MagSafe de Colores
-                </h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Funda compatible MagSafe con imanes integrados. Variedad de
-                  colores disponibles.
-                </p>
-                <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$300</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'Funda MagSafe Colores', 300)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div
-              data-category="fundas"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
-              style="transition-delay: 0.1s"
-            >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/templado-iphone.png"
-                  alt="Templado iPhone Autoaplicable"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
-              </div>
-              <div class="p-4 sm:p-5 flex flex-col flex-grow">
-                <h3 class="text-base sm:text-lg font-bold mb-1">
-                  Templado iPhone Autoaplicable
-                </h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Templado autoaplicable para iPhone. Fácil instalación y máxima
-                  protección.
-                </p>
-                <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$300-500</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'Templado iPhone', 400)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div
-              data-category="fundas"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              data-name="funda magsafe colores"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
               style="transition-delay: 0.2s"
             >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/funda-silicona.png"
-                  alt="Funda Silicona"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/funda-magsafe-colores.png" alt="Funda MagSafe de Colores" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'Funda MagSafe Colores', 300)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
+                </div>
               </div>
               <div class="p-4 sm:p-5 flex flex-col flex-grow">
-                <h3 class="text-base sm:text-lg font-bold mb-1">
-                  Funda Silicona
-                </h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Funda de silicona suave y resistente. Protección completa para
-                  tu dispositivo.
-                </p>
+                <h3 class="text-base sm:text-lg font-bold mb-1">Funda MagSafe de Colores</h3>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Funda compatible MagSafe con imanes integrados. Variedad de colores disponibles.</p>
                 <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$300</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'Funda Silicona', 300)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
+                  <span class="text-xl sm:text-2xl font-black text-white">$300</span>
+                  <button onclick="addToCart(event, 'Funda MagSafe Colores', 300)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
                   </button>
                 </div>
               </div>
@@ -911,38 +964,77 @@
 
             <div
               data-category="fundas"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              data-name="templado iphone autoaplicable"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              style="transition-delay: 0.25s"
             >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/funda-magsafe-apple.png"
-                  alt="Funda MagSafe Apple"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/templado-iphone.png" alt="Templado iPhone Autoaplicable" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'Templado iPhone', 400)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
+                </div>
               </div>
               <div class="p-4 sm:p-5 flex flex-col flex-grow">
-                <h3 class="text-base sm:text-lg font-bold mb-1">
-                  Funda MagSafe Apple
-                </h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Funda original Apple con MagSafe. Diseño premium y
-                  compatibilidad total.
-                </p>
+                <h3 class="text-base sm:text-lg font-bold mb-1">Templado iPhone Autoaplicable</h3>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Templado autoaplicable para iPhone. Fácil instalación y máxima protección.</p>
                 <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$300</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'Funda MagSafe Apple', 300)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
+                  <span class="text-xl sm:text-2xl font-black text-white">$300-500</span>
+                  <button onclick="addToCart(event, 'Templado iPhone', 400)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              data-category="fundas"
+              data-name="funda silicona"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              style="transition-delay: 0.05s"
+            >
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/funda-silicona.png" alt="Funda Silicona" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'Funda Silicona', 300)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="p-4 sm:p-5 flex flex-col flex-grow">
+                <h3 class="text-base sm:text-lg font-bold mb-1">Funda Silicona</h3>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Funda de silicona suave y resistente. Protección completa para tu dispositivo.</p>
+                <div class="mt-auto pt-3 flex items-center justify-between">
+                  <span class="text-xl sm:text-2xl font-black text-white">$300</span>
+                  <button onclick="addToCart(event, 'Funda Silicona', 300)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              data-category="fundas"
+              data-name="funda magsafe apple"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              style="transition-delay: 0.1s"
+            >
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/funda-magsafe-apple.png" alt="Funda MagSafe Apple" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'Funda MagSafe Apple', 300)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="p-4 sm:p-5 flex flex-col flex-grow">
+                <h3 class="text-base sm:text-lg font-bold mb-1">Funda MagSafe Apple</h3>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Funda original Apple con MagSafe. Diseño premium y compatibilidad total.</p>
+                <div class="mt-auto pt-3 flex items-center justify-between">
+                  <span class="text-xl sm:text-2xl font-black text-white">$300</span>
+                  <button onclick="addToCart(event, 'Funda MagSafe Apple', 300)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
                   </button>
                 </div>
               </div>
@@ -951,39 +1043,25 @@
             <!-- CARGADORES -->
             <div
               data-category="cargadores"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
-              style="transition-delay: 0.1s"
+              data-name="kit ficha 20w"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              style="transition-delay: 0.15s"
             >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/kit-ficha-20w.png"
-                  alt="Kit Ficha 20W + Cable"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/kit-ficha-20w.png" alt="Kit Ficha 20W + Cable" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'Kit Ficha 20W', 400)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
+                </div>
               </div>
               <div class="p-4 sm:p-5 flex flex-col flex-grow">
-                <h3 class="text-base sm:text-lg font-bold mb-1">
-                  Kit Ficha 20W + Cable
-                </h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Kit de carga rápida con adaptador de 20W y cable incluido.
-                  Carga rápida, segura y eficiente.
-                </p>
+                <h3 class="text-base sm:text-lg font-bold mb-1">Kit Ficha 20W + Cable</h3>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Kit de carga rápida con adaptador de 20W y cable incluido. Carga rápida, segura y eficiente.</p>
                 <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$400</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'Kit Ficha 20W', 400)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
+                  <span class="text-xl sm:text-2xl font-black text-white">$400</span>
+                  <button onclick="addToCart(event, 'Kit Ficha 20W', 400)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
                   </button>
                 </div>
               </div>
@@ -991,39 +1069,25 @@
 
             <div
               data-category="cargadores"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              data-name="kit ficha 20w cc"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
               style="transition-delay: 0.2s"
             >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/kit-ficha-20w-cc.png"
-                  alt="Kit Ficha 20W + Cable C-C"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/kit-ficha-20w-cc.png" alt="Kit Ficha 20W + Cable C-C" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'Kit Ficha 20W CC', 400)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
+                </div>
               </div>
               <div class="p-4 sm:p-5 flex flex-col flex-grow">
-                <h3 class="text-base sm:text-lg font-bold mb-1">
-                  Kit Ficha 20W + Cable C-C
-                </h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Kit de carga rápida con adaptador de 20W y cable USB-C
-                  incluido.
-                </p>
+                <h3 class="text-base sm:text-lg font-bold mb-1">Kit Ficha 20W + Cable C-C</h3>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Kit de carga rápida con adaptador de 20W y cable USB-C incluido.</p>
                 <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$400</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'Kit Ficha 20W CC', 400)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
+                  <span class="text-xl sm:text-2xl font-black text-white">$400</span>
+                  <button onclick="addToCart(event, 'Kit Ficha 20W CC', 400)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
                   </button>
                 </div>
               </div>
@@ -1031,38 +1095,25 @@
 
             <div
               data-category="cargadores"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              data-name="cargador magsafe iphone"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              style="transition-delay: 0.25s"
             >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/cargador-magsafe.png"
-                  alt="Cargador MagSafe iPhone"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/cargador-magsafe.png" alt="Cargador MagSafe iPhone" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'Cargador MagSafe', 600)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
+                </div>
               </div>
               <div class="p-4 sm:p-5 flex flex-col flex-grow">
-                <h3 class="text-base sm:text-lg font-bold mb-1">
-                  Cargador MagSafe iPhone
-                </h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Cargador inalámbrico magnético compatible con iPhone MagSafe.
-                  Carga de alta velocidad.
-                </p>
+                <h3 class="text-base sm:text-lg font-bold mb-1">Cargador MagSafe iPhone</h3>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Cargador inalámbrico magnético compatible con iPhone MagSafe. Carga de alta velocidad.</p>
                 <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$600</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'Cargador MagSafe', 600)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
+                  <span class="text-xl sm:text-2xl font-black text-white">$600</span>
+                  <button onclick="addToCart(event, 'Cargador MagSafe', 600)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
                   </button>
                 </div>
               </div>
@@ -1070,39 +1121,25 @@
 
             <div
               data-category="cargadores"
-              class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
-              style="transition-delay: 0.1s"
+              data-name="bateria magsafe apple"
+              class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up"
+              style="transition-delay: 0.05s"
             >
-              <div
-                class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center"
-              >
-                <img
-                  src="img/bateria-magsafe.png"
-                  alt="Batería MagSafe Apple"
-                  class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-                />
+              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+                <img src="img/bateria-magsafe.png" alt="Batería MagSafe Apple" class="product-img object-contain w-full h-full transition-transform duration-500" />
+                <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                  <button onclick="addToCart(event, 'Batería MagSafe', 1100)" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                    <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                  </button>
+                </div>
               </div>
               <div class="p-4 sm:p-5 flex flex-col flex-grow">
-                <h3 class="text-base sm:text-lg font-bold mb-1">
-                  Batería MagSafe Apple
-                </h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
-                  Batería externa MagSafe. Se acopla magnéticamente al iPhone
-                  para carga inalámbrica rápida.
-                </p>
+                <h3 class="text-base sm:text-lg font-bold mb-1">Batería MagSafe Apple</h3>
+                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">Batería externa MagSafe. Se acopla magnéticamente al iPhone para carga inalámbrica rápida.</p>
                 <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white"
-                    >$1100</span
-                  >
-                  <button
-                    onclick="addToCart(event, 'Batería MagSafe', 1100)"
-                    class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90"
-                    aria-label="Agregar al carrito"
-                  >
-                    <i
-                      data-lucide="shopping-cart"
-                      class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
-                    ></i>
+                  <span class="text-xl sm:text-2xl font-black text-white">$1100</span>
+                  <button onclick="addToCart(event, 'Batería MagSafe', 1100)" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
                   </button>
                 </div>
               </div>
@@ -1114,166 +1151,92 @@
             id="dynamic-products"
             class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
           ></div>
+
+          <!-- Empty state -->
+          <div id="empty-products" class="hidden text-center py-20">
+            <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gray-800 flex items-center justify-center">
+              <i data-lucide="search-x" class="w-10 h-10 text-gray-600"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">No encontramos productos</h3>
+            <p class="text-gray-400 text-sm">Probá con otra búsqueda o categoría.</p>
+          </div>
         </div>
       </section>
 
       <!-- Footer -->
-      <footer
-        id="contacto"
-        class="bg-black border-t border-gray-900 pt-10 sm:pt-12 pb-6 sm:pb-8"
-      >
+      <footer class="bg-black border-t border-gray-900 pt-8 sm:pt-10 pb-6 sm:pb-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div
-            class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8"
-          >
-            <div>
-              <div class="flex items-center gap-2 mb-3 sm:mb-4">
-                <img
-                  src="img/logo.png"
-                  alt="TECHZONEUY"
-                  class="w-8 h-8 rounded-full object-cover"
-                />
-                <span
-                  class="text-lg sm:text-xl font-bold tracking-[0.2em] uppercase"
-                  >TECH<span class="text-blue-600">ZONE</span></span
-                >
-              </div>
-              <p class="text-gray-400 max-w-sm text-xs sm:text-sm">
-                Tu tienda de confianza para accesorios tecnológicos.
-              </p>
+          <div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs sm:text-sm text-gray-500">
+            <div class="flex items-center gap-2">
+              <img src="img/logo.png" alt="TECHZONEUY" class="w-7 h-7 rounded-full object-cover" />
+              <span class="font-bold tracking-[0.2em] uppercase">TECH<span class="text-blue-600">ZONE</span></span>
             </div>
-            <div>
-              <h4
-                class="text-white font-bold mb-3 sm:mb-4 text-sm sm:text-base"
-              >
-                Contacto
-              </h4>
-              <ul class="space-y-2 text-gray-400 text-xs sm:text-sm">
-                <li class="flex items-center gap-2">
-                  <i data-lucide="map-pin" class="w-4 h-4 text-blue-500"></i>
-                  Uruguay
-                </li>
-                <li class="flex items-center gap-2">
-                  <i data-lucide="instagram" class="w-4 h-4 text-blue-500"></i>
-                  Instagram: techzoneuy
-                </li>
-                <li class="flex items-center gap-2">
-                  <i data-lucide="phone" class="w-4 h-4 text-blue-500"></i> +598
-                  92 486 156
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div
-            class="border-t border-gray-900 pt-5 sm:pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500"
-          >
             <p>
               &copy; 2026 TechZone UY. Todos los derechos reservados.
-              <a href="admin.html" class="text-gray-700 hover:text-gray-500"
-                >.</a
-              >
+              <a href="contacto.html" class="text-gray-400 hover:text-blue-500 transition-colors">Contacto</a>
             </p>
-            <div class="flex items-center gap-3 sm:gap-4">
-              <a
-                href="#"
-                class="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300"
-                ><i data-lucide="instagram" class="w-4 h-4"></i
-              ></a>
-              <a
-                href="#"
-                class="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300"
-                ><i data-lucide="facebook" class="w-4 h-4"></i
-              ></a>
-              <a
-                href="#"
-                class="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300"
-                ><i data-lucide="twitter" class="w-4 h-4"></i
-              ></a>
-            </div>
           </div>
         </div>
       </footer>
     </main>
 
-    <!-- Botón flotante WhatsApp -->
+    <!-- WhatsApp floating button -->
     <a
-      href="https://api.whatsapp.com/send?phone=59892489156&text=Hola!%20Vi%20su%20cat%C3%A1logo%20y%20quer%C3%ADa%20saber%20si%20me%20puede%20asesorar%20con%20un%20producto%20que%20estoy%20buscando%3F%20%C2%A1Gracias!%20%F0%9F%91%8B"
+      href="https://api.whatsapp.com/send?phone=59892486156&text=Hola!%20Vi%20su%20cat%C3%A1logo%20y%20quer%C3%ADa%20saber%20si%20me%20puede%20asesorar%20con%20un%20producto%20que%20estoy%20buscando%3F%20%C2%A1Gracias!%20%F0%9F%91%8B"
       target="_blank"
-      class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-40 pulse-blue"
+      class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-40 pulse-whatsapp"
     >
       <i data-lucide="message-circle" class="w-6 h-6"></i>
     </a>
 
     <!-- Cart Overlay -->
-    <div
-      id="cart-overlay"
-      class="cart-overlay fixed inset-0 bg-black/60 z-50"
-      onclick="closeCart()"
-    ></div>
+    <div id="cart-overlay" class="cart-overlay fixed inset-0 bg-black/60 z-50" onclick="closeCart()"></div>
 
     <!-- Cart Sidebar -->
     <div
       id="cart-sidebar"
       class="cart-sidebar fixed top-0 right-0 h-full w-full max-w-md bg-gray-900 border-l border-gray-800 z-50 flex flex-col"
     >
-      <div
-        class="flex items-center justify-between p-4 border-b border-gray-800"
-      >
+      <div class="flex items-center justify-between p-4 border-b border-gray-800">
         <h2 class="text-xl font-bold flex items-center gap-2">
           <i data-lucide="shopping-cart" class="w-6 h-6 text-blue-500"></i>
           Mi Carrito
         </h2>
-        <button
-          onclick="closeCart()"
-          class="p-2 hover:bg-gray-800 rounded-lg transition-colors"
-        >
+        <button onclick="closeCart()" class="p-2 hover:bg-gray-800 rounded-lg transition-colors hover:rotate-90 transition-transform duration-300">
           <i data-lucide="x" class="w-6 h-6"></i>
         </button>
       </div>
 
-      <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-4">
-        <!-- Cart items will be rendered here -->
-      </div>
+      <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
 
-      <div
-        id="cart-empty"
-        class="flex-1 flex flex-col items-center justify-center text-gray-500 p-4"
-      >
+      <div id="cart-empty" class="flex-1 flex flex-col items-center justify-center text-gray-500 p-4">
         <i data-lucide="shopping-cart" class="w-16 h-16 mb-4 opacity-30"></i>
         <p class="text-lg font-medium">Tu carrito está vacío</p>
         <p class="text-sm">Agregá productos para comenzar</p>
       </div>
 
-      <div
-        id="cart-footer"
-        class="hidden border-t border-gray-800 p-4 space-y-4"
-      >
+      <div id="cart-footer" class="hidden border-t border-gray-800 p-4 space-y-4">
         <div class="flex justify-between items-center text-lg font-bold">
           <span>Total:</span>
           <span id="cart-total" class="text-blue-500">$0</span>
         </div>
         <button
           onclick="checkoutWhatsApp()"
-          class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          class="btn-primary w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-[0.98]"
         >
           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-            <path
-              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
-            />
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
           </svg>
           Finalizar compra por WhatsApp
         </button>
         <a
-          href="tel:+59892489156"
+          href="tel:+59892486156"
           class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all"
         >
           <i data-lucide="phone" class="w-5 h-5"></i>
-          ¿No se abrió WhatsApp? Llamá al +598 92 489 156
+          ¿No se abrió WhatsApp? Llamá al +598 92 486 156
         </a>
-        <button
-          onclick="clearCart()"
-          class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium py-3 px-6 rounded-xl transition-colors"
-        >
+        <button onclick="clearCart()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium py-3 px-6 rounded-xl transition-colors">
           Vaciar carrito
         </button>
       </div>
@@ -1281,6 +1244,9 @@
 
     <script>
       lucide.createIcons();
+
+      // Clear stale localStorage products (old data with placeholder images)
+      localStorage.removeItem('techzoneuy_products.json');
 
       // Mobile Menu
       const mobileMenuBtn = document.getElementById("mobile-menu-btn");
@@ -1290,15 +1256,32 @@
       const mobileLinks = document.querySelectorAll(".mobile-link");
 
       function toggleMenu() {
+        const isHidden = mobileMenu.classList.contains("hidden");
         mobileMenu.classList.toggle("hidden");
         menuIcon.classList.toggle("hidden");
         closeIcon.classList.toggle("hidden");
+        mobileMenuBtn.classList.toggle("menu-toggle-active", !isHidden);
       }
       mobileMenuBtn.addEventListener("click", toggleMenu);
       mobileLinks.forEach((link) => {
         link.addEventListener("click", () => {
           if (!mobileMenu.classList.contains("hidden")) toggleMenu();
         });
+      });
+
+      // Navbar scroll behavior
+      const navbar = document.getElementById("navbar");
+      let lastScrollY = 0;
+      window.addEventListener("scroll", () => {
+        const currentScroll = window.scrollY;
+        if (currentScroll > 30) {
+          navbar.classList.add("navbar-scrolled", "border-gray-800/60");
+          navbar.classList.remove("border-transparent");
+        } else {
+          navbar.classList.remove("navbar-scrolled", "border-gray-800/60");
+          navbar.classList.add("border-transparent");
+        }
+        lastScrollY = currentScroll;
       });
 
       // Cart
@@ -1316,27 +1299,27 @@
 
       function addToCart(event, productName, price) {
         event.preventDefault();
-
+        event.stopPropagation();
         const existingItem = cart.find((item) => item.name === productName);
-        if (existingItem) {
-          existingItem.quantity += 1;
-        } else {
-          cart.push({ name: productName, price: price, quantity: 1 });
-        }
-
+        if (existingItem) existingItem.quantity += 1;
+        else cart.push({ name: productName, price: price, quantity: 1 });
         saveCart();
 
-        // Button animation
+        // Button feedback
         const btn = event.currentTarget;
-        btn.classList.add("bg-green-600", "text-white");
-        btn.classList.remove("bg-white", "text-black");
+        if (btn.tagName === 'BUTTON') {
+          btn.classList.add("bg-green-600", "text-white");
+          btn.classList.remove("bg-white", "text-black", "bg-blue-600");
+          setTimeout(() => {
+            btn.classList.remove("bg-green-600", "text-white");
+            if (btn.querySelector('i')?.getAttribute('data-lucide') === 'plus') {
+              btn.classList.add("bg-blue-600");
+            } else {
+              btn.classList.add("bg-white", "text-black");
+            }
+          }, 500);
+        }
 
-        setTimeout(() => {
-          btn.classList.remove("bg-green-600", "text-white");
-          btn.classList.add("bg-white", "text-black");
-        }, 500);
-
-        // Open cart briefly
         openCart();
       }
 
@@ -1349,11 +1332,8 @@
         const item = cart.find((item) => item.name === productName);
         if (item) {
           item.quantity += change;
-          if (item.quantity <= 0) {
-            removeFromCart(productName);
-          } else {
-            saveCart();
-          }
+          if (item.quantity <= 0) removeFromCart(productName);
+          else saveCart();
         }
       }
 
@@ -1364,22 +1344,21 @@
 
       function updateCartUI() {
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        const totalPrice = cart.reduce(
-          (sum, item) => sum + item.price * item.quantity,
-          0,
-        );
+        const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-        // Update badge
+        const prevCount = parseInt(cartBadge.textContent || '0');
         cartBadge.textContent = totalItems;
         if (totalItems > 0) {
           cartBadge.classList.remove("hidden");
-          cartBadge.classList.add("cart-bounce");
-          setTimeout(() => cartBadge.classList.remove("cart-bounce"), 400);
+          if (totalItems !== prevCount) {
+            cartBadge.style.animation = 'none';
+            void cartBadge.offsetWidth;
+            cartBadge.style.animation = 'cart-badge-pop 0.4s ease';
+          }
         } else {
           cartBadge.classList.add("hidden");
         }
 
-        // Update sidebar
         if (cart.length === 0) {
           cartEmpty.classList.remove("hidden");
           cartFooter.classList.add("hidden");
@@ -1433,17 +1412,9 @@
       async function checkoutWhatsApp() {
         if (cart.length === 0) return;
 
-        const totalPrice = cart.reduce(
-          (sum, item) => sum + item.price * item.quantity,
-          0,
-        );
-
+        const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
         const orderData = {
-          items: cart.map((item) => ({
-            name: item.name,
-            price: item.price,
-            quantity: item.quantity,
-          })),
+          items: cart.map((item) => ({ name: item.name, price: item.price, quantity: item.quantity })),
           total: totalPrice,
         };
 
@@ -1453,87 +1424,124 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData),
           });
-        } catch (err) {
-          console.error('Error guardando pedido:', err);
-        }
+        } catch (err) { console.error('Error guardando pedido:', err); }
 
         let message = "✨ *Hola! Quiero realizar un pedido* ✨\n\n";
         message += "━━━━━━━━━━━━━━━━━━━━━━\n";
         message += "🛒 *ME INTERESAN ESTOS PRODUCTOS:*\n";
         message += "━━━━━━━━━━━━━━━━━━━━━━\n\n";
-
-        cart.forEach((item, index) => {
-          message += `├ ${item.quantity}x *${item.name}*\n\n`;
-        });
-
+        cart.forEach((item) => { message += `├ ${item.quantity}x *${item.name}*\n\n`; });
         message += "━━━━━━━━━━━━━━━━━━━━━━\n\n";
-        message +=
-          "Me gustaría saber en qué colores y modelos están disponibles de estos productos. 😊\n\n";
-        message += "¡Gracias! 🙌";
+        message += "Me gustaría saber en qué colores y modelos están disponibles de estos productos. 😊\n\n¡Gracias! 🙌";
 
-        const encodedMessage = encodeURIComponent(message);
-        window.open(
-          `https://api.whatsapp.com/send?phone=59892489156&text=${encodedMessage}`,
-          "_blank",
-        );
-
-        cart = [];
-        saveCart();
-        closeCart();
+        window.open(`https://api.whatsapp.com/send?phone=59892486156&text=${encodeURIComponent(message)}`, "_blank");
+        cart = []; saveCart(); closeCart();
       }
 
-      // Initialize cart UI
       updateCartUI();
+
+      // Dynamic products from admin
+      const brandColors = {
+        Apple: 'bg-gray-700',
+        JBL: 'bg-orange-600',
+        Samsung: 'bg-blue-600',
+        Sony: 'bg-black',
+        Xiaomi: 'bg-orange-500',
+      };
+
+      let lastProductsHash = '';
 
       async function loadDynamicProducts() {
         const container = document.getElementById('dynamic-products');
         const staticGrid = document.getElementById('products-grid');
 
+        let allProducts = [];
+
+        // 1. Try API first
         try {
-          const adminProducts = await fetch('api/products.php?action=list').then(r => r.json());
+          const apiProducts = await fetch('api/products.php?action=list').then(r => r.json());
+          if (apiProducts && apiProducts.length > 0) allProducts = apiProducts;
+        } catch (e) {}
 
-          if (!adminProducts || adminProducts.length === 0) {
-            container.innerHTML = '';
-            staticGrid.classList.remove('hidden');
-            return;
+        // 2. Fallback to data/products.json
+        if (allProducts.length === 0) {
+          try {
+            const fileProducts = await fetch('data/products.json?_=' + Date.now()).then(r => r.json());
+            if (fileProducts && fileProducts.length > 0) allProducts = fileProducts;
+          } catch (e) {}
+        }
+
+        // 3. Merge with localStorage (admin edits override file, new products added)
+        try {
+          const localProducts = JSON.parse(localStorage.getItem('techzoneuy_products.json') || '[]');
+          if (localProducts.length > 0) {
+            const fileIds = new Set(allProducts.map(p => p.id));
+            localProducts.forEach(p => {
+              if (fileIds.has(p.id)) {
+                const idx = allProducts.findIndex(x => x.id === p.id);
+                if (idx >= 0) allProducts[idx] = p;
+              } else {
+                allProducts.push(p);
+              }
+            });
           }
+        } catch (e) {}
 
-          staticGrid.classList.add('hidden');
+        // 4. Check if changed (avoid unnecessary re-render)
+        const hash = JSON.stringify(allProducts.map(p => `${p.id}|${p.name}|${p.price}|${p.description || ''}|${p.category || ''}|${(p.image || '').slice(0, 80)}`).sort());
+        if (hash === lastProductsHash) return;
+        lastProductsHash = hash;
 
-          const brandColors = {
-            Apple: 'bg-gray-700',
-            JBL: 'bg-orange-600',
-            Samsung: 'bg-blue-600',
-            Sony: 'bg-black',
-            Xiaomi: 'bg-orange-500',
-          };
+        if (allProducts.length === 0) {
+          container.innerHTML = '';
+          staticGrid.classList.remove('hidden');
+          updateProductCount();
+          return;
+        }
 
-          container.innerHTML = adminProducts.map((product) => `
-            <div data-category="${product.category}" class="product-card bg-gray-800/40 border border-gray-700 rounded-xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col">
-              <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
-                <img src="${product.image}" alt="${product.name}" class="product-img object-contain w-full h-full group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/400x400/1a1a2e/ffffff?text=Sin+imagen'"/>
-                ${product.brand ? `<div class="absolute top-3 left-3 sm:top-4 sm:left-4 ${brandColors[product.brand] || 'bg-gray-700'}/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white">${product.brand}</div>` : ''}
-              </div>
-              <div class="p-4 sm:p-5 flex flex-col flex-grow">
-                <h3 class="text-base sm:text-lg font-bold mb-1">${product.name}</h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">${product.description}</p>
-                <div class="mt-auto pt-3 flex items-center justify-between">
-                  <span class="text-xl sm:text-2xl font-black text-white">$${product.price.toLocaleString('es-UY')}</span>
-                  <button onclick="addToCart(event, '${product.name.replace(/'/g, "\\'")}', ${product.price})" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90" aria-label="Agregar al carrito">
-                    <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
-                  </button>
-                </div>
+        staticGrid.classList.add('hidden');
+
+        container.innerHTML = allProducts.map((product) => `
+          <div data-category="${product.category}" data-name="${product.name.toLowerCase()}" class="product-card bg-gray-800/40 border border-gray-700 rounded-2xl overflow-hidden hover:border-blue-500 transition-all duration-300 group flex flex-col fade-up anim-card-glow">
+            <div class="relative aspect-square overflow-hidden bg-gray-900 p-4 sm:p-6 flex items-center justify-center">
+              <img src="${product.image}" alt="${product.name}" class="product-img object-contain w-full h-full transition-transform duration-500" onerror="this.src='https://placehold.co/400x400/1a1a2e/ffffff?text=Sin+imagen'"/>
+              ${product.brand ? `<div class="absolute top-3 left-3 sm:top-4 sm:left-4 ${brandColors[product.brand] || 'bg-gray-700'}/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-white">${product.brand}</div>` : ''}
+              <div class="quick-add absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+                <button onclick="addToCart(event, '${product.name.replace(/'/g, "\\'")}', ${product.price})" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-90">
+                  <i data-lucide="plus" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                </button>
               </div>
             </div>
-          `).join('');
+            <div class="p-4 sm:p-5 flex flex-col flex-grow">
+              <h3 class="text-base sm:text-lg font-bold mb-1">${product.name}</h3>
+              <p class="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">${product.description}</p>
+              <div class="mt-auto pt-3 flex items-center justify-between">
+                <span class="text-xl sm:text-2xl font-black text-white">$${product.price.toLocaleString('es-UY')}</span>
+                <button onclick="addToCart(event, '${product.name.replace(/'/g, "\\'")}', ${product.price})" class="bg-white text-black hover:bg-blue-600 hover:text-white p-2 sm:p-2.5 rounded-lg transition-all active:scale-90">
+                  <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `).join('');
 
-          lucide.createIcons();
-        } catch (err) {
-          console.error('Error cargando productos:', err);
-        }
+        lucide.createIcons();
+        observeNewCards();
+        updateProductCount();
       }
 
       loadDynamicProducts();
+      setInterval(loadDynamicProducts, 2000);
+
+      function observeNewCards() {
+        const cards = document.querySelectorAll('.product-card.fade-up:not(.visible)');
+        cards.forEach(card => observer.observe(card));
+      }
+
+      function updateProductCount() {
+        const visible = Array.from(document.querySelectorAll('.product-card')).filter(c => c.style.display !== 'none');
+        document.getElementById('product-count').textContent = visible.length;
+      }
 
       // Filter
       const categoryNames = {
@@ -1545,79 +1553,83 @@
         cargadores: "Cargadores y baterías externas.",
       };
 
+      let currentCategory = "all";
+      let currentSearch = "";
+
       function filterProducts(category) {
-        const products = document.querySelectorAll(".product-card");
-        const categoryBtns = document.querySelectorAll(".category-btn");
+        currentCategory = category;
+        applyFilters();
         const subtitle = document.getElementById("products-subtitle");
-
         subtitle.textContent = categoryNames[category] || categoryNames["all"];
-
+        const categoryBtns = document.querySelectorAll(".category-btn");
         categoryBtns.forEach((btn) => {
           if (btn.dataset.category === category) {
             btn.classList.add("bg-blue-600", "border-blue-600", "text-white");
             btn.classList.remove("border-gray-700", "text-gray-300");
           } else {
-            btn.classList.remove(
-              "bg-blue-600",
-              "border-blue-600",
-              "text-white",
-            );
+            btn.classList.remove("bg-blue-600", "border-blue-600", "text-white");
             btn.classList.add("border-gray-700", "text-gray-300");
-          }
-        });
-
-        products.forEach((product, index) => {
-          if (category === "all" || product.dataset.category === category) {
-            product.style.display = "flex";
-            product.style.opacity = "0";
-            product.style.transform = "translateY(20px) scale(0.95)";
-            setTimeout(
-              () => {
-                product.style.transition =
-                  "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)";
-                product.style.opacity = "1";
-                product.style.transform = "translateY(0) scale(1)";
-              },
-              50 + index * 50,
-            );
-          } else {
-            product.style.opacity = "0";
-            product.style.transform = "translateY(20px) scale(0.95)";
-            setTimeout(() => {
-              product.style.display = "none";
-            }, 300);
           }
         });
       }
 
-      // Scroll Animations
+      function handleSearch(value) {
+        currentSearch = value.toLowerCase().trim();
+        applyFilters();
+      }
+
+      function applyFilters() {
+        const products = document.querySelectorAll(".product-card");
+        let visibleCount = 0;
+        products.forEach((product, index) => {
+          const category = product.dataset.category;
+          const name = product.dataset.name || "";
+          const matchCategory = currentCategory === "all" || category === currentCategory;
+          const matchSearch = !currentSearch || name.includes(currentSearch);
+          if (matchCategory && matchSearch) {
+            product.style.display = "flex";
+            product.style.opacity = "0";
+            product.style.transform = "translateY(20px) scale(0.95)";
+            setTimeout(() => {
+              product.style.transition = "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)";
+              product.style.opacity = "1";
+              product.style.transform = "translateY(0) scale(1)";
+            }, 50 + visibleCount * 40);
+            visibleCount++;
+          } else {
+            product.style.opacity = "0";
+            product.style.transform = "translateY(20px) scale(0.95)";
+            setTimeout(() => { product.style.display = "none"; }, 300);
+          }
+        });
+        document.getElementById("product-count").textContent = visibleCount;
+        document.getElementById("empty-products").classList.toggle("hidden", visibleCount > 0);
+      }
+
+      // Scroll animations
       const observerOptions = {
-        threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px",
+        threshold: 0.12,
+        rootMargin: "0px 0px -60px 0px",
       };
 
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
+          if (entry.isIntersecting) entry.target.classList.add("visible");
         });
       }, observerOptions);
 
-      document
-        .querySelectorAll(
-          ".fade-up, .fade-in, .scale-in, .slide-right, .slide-left",
-        )
-        .forEach((el) => {
-          observer.observe(el);
-        });
+      document.querySelectorAll(".fade-up, .fade-in, .scale-in, .slide-right, .slide-left").forEach((el) => {
+        observer.observe(el);
+      });
 
-      // Trigger initial animations
+      // Initial hero animations
       setTimeout(() => {
-        document.querySelectorAll(".fade-up").forEach((el) => {
+        document.querySelectorAll("main > section:first-of-type .fade-up").forEach((el) => {
           el.classList.add("visible");
         });
       }, 100);
+
+      updateProductCount();
     </script>
   </body>
 </html>

@@ -8,30 +8,434 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+      :root {
+        --color-bg: #000;
+        --color-fg: #fff;
+        --color-blue-400: #60a5fa;
+        --color-blue-500: #3b82f6;
+        --color-blue-600: #2563eb;
+        --color-blue-700: #1d4ed8;
+        --color-gray-700: #374151;
+        --color-gray-800: #1f2937;
+        --color-gray-900: #111827;
+      }
       body {
         font-family: "Inter", sans-serif;
-        background-color: #000;
-        color: #fff;
+        background-color: var(--color-bg);
+        color: var(--color-fg);
+        overflow-x: hidden;
       }
-      .perspective-1000 {
-        perspective: 1200px;
-      }
+      .perspective-1000 { perspective: 1200px; }
       #hero-carousel {
         position: relative;
         transform-style: preserve-3d;
-        /* MODIFICACIÓN: Asegura que ocupe el centro del contenedor */
         display: flex;
         align-items: center;
         justify-content: center;
       }
       #hero-carousel .carousel-card {
         position: absolute;
-        /* MODIFICACIÓN: Cambiado de 60%/70% a 50% para un centrado perfecto */
         top: 50%;
         left: 50%;
         transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       }
-      /* ... resto de tus estilos ... */
+
+      /* ============ ANIMATIONS ============ */
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
+      @keyframes glow-pulse {
+        0%, 100% { box-shadow: 0 0 20px rgba(37, 99, 235, 0.4); }
+        50% { box-shadow: 0 0 40px rgba(37, 99, 235, 0.8); }
+      }
+      @keyframes gradient-shift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      @keyframes fade-up {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes scale-in {
+        from { opacity: 0; transform: scale(0.85); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      @keyframes slide-right {
+        from { opacity: 0; transform: translateX(-40px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes slide-left {
+        from { opacity: 0; transform: translateX(40px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes rotate-in {
+        from { opacity: 0; transform: rotate(-10deg) scale(0.9); }
+        to { opacity: 1; transform: rotate(0) scale(1); }
+      }
+      @keyframes shine {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(200%); }
+      }
+      @keyframes blob {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+      }
+      @keyframes typing-cursor {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+      }
+      @keyframes pulse-ring {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(37, 99, 235, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+      }
+
+      .anim-float { animation: float 3s ease-in-out infinite; }
+      .anim-glow { animation: glow-pulse 2.5s ease-in-out infinite; }
+      .anim-gradient {
+        background-size: 200% 200%;
+        animation: gradient-shift 6s ease infinite;
+      }
+      .anim-blob { animation: blob 8s ease-in-out infinite; }
+      .anim-pulse-ring { animation: pulse-ring 2s infinite; }
+
+      .fade-up {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .fade-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .fade-in {
+        opacity: 0;
+        transition: opacity 0.8s ease-out;
+      }
+      .fade-in.visible { opacity: 1; }
+      .scale-in {
+        opacity: 0;
+        transform: scale(0.85);
+        transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .scale-in.visible {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .slide-right {
+        opacity: 0;
+        transform: translateX(-40px);
+        transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .slide-right.visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .slide-left {
+        opacity: 0;
+        transform: translateX(40px);
+        transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .slide-left.visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .rotate-in {
+        opacity: 0;
+        transform: rotate(-10deg) scale(0.9);
+        transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .rotate-in.visible {
+        opacity: 1;
+        transform: rotate(0) scale(1);
+      }
+
+      /* ============ COMPONENTS ============ */
+      .nav-link {
+        position: relative;
+        transition: color 0.3s ease;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--color-blue-500);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+
+      .btn-primary {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+      .btn-primary::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
+        transition: left 0.6s ease;
+      }
+      .btn-primary:hover::before { left: 100%; }
+      .btn-primary:hover { transform: translateY(-2px); }
+      .btn-primary:active { transform: translateY(0); }
+
+      .glass {
+        background: rgba(17, 24, 39, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .feature-card {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .feature-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.0), rgba(37, 99, 235, 0.1));
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+      .feature-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--color-blue-500);
+        box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.3);
+      }
+      .feature-card:hover::before { opacity: 1; }
+      .feature-card:hover .feature-icon {
+        transform: scale(1.15) rotate(-6deg);
+        background: var(--color-blue-600);
+      }
+      .feature-icon {
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .category-card {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+      }
+      .category-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.95));
+      }
+      .category-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        border-color: var(--color-blue-500);
+      }
+      .category-card:hover .category-img {
+        transform: scale(1.15);
+      }
+      .category-img {
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .stat-card {
+        transition: all 0.4s ease;
+      }
+      .stat-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--color-blue-500);
+      }
+      .stat-card:hover .stat-icon {
+        transform: scale(1.1) rotate(8deg);
+      }
+      .stat-icon { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #111; }
+      ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: var(--color-blue-600); }
+
+      /* WhatsApp pulse */
+      .pulse-whatsapp {
+        animation: pulse-ring 2s infinite;
+      }
+
+      /* Marquee */
+      @keyframes marquee {
+        from { transform: translateX(0); }
+        to { transform: translateX(-50%); }
+      }
+      .marquee-track {
+        animation: marquee 25s linear infinite;
+      }
+
+      /* Section divider */
+      .section-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--color-blue-600), transparent);
+        opacity: 0.4;
+      }
+      /* ============ NAVBAR ENHANCED ============ */
+      /* Animated underline (gradient that slides) */
+      .nav-link {
+        position: relative;
+        transition: color 0.3s ease;
+        padding: 4px 0;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--color-blue-400), var(--color-blue-600));
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        transform: translateX(-50%);
+        border-radius: 2px;
+      }
+      .nav-link:hover {
+        color: var(--color-blue-400);
+      }
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+      .nav-link.active {
+        color: var(--color-blue-500);
+      }
+
+      /* Glow dot indicator on active link */
+      .nav-link.active::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: var(--color-blue-500);
+        border-radius: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 0 10px var(--color-blue-500);
+        animation: dot-pulse 2s ease-in-out infinite;
+      }
+      @keyframes dot-pulse {
+        0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+        50% { opacity: 0.6; transform: translateX(-50%) scale(1.4); }
+      }
+
+      /* Logo pulse glow */
+      @keyframes logo-glow {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        50% { box-shadow: 0 0 20px 2px rgba(37, 99, 235, 0.4); }
+      }
+      .logo-glow {
+        border-radius: 50%;
+        animation: logo-glow 3s ease-in-out infinite;
+      }
+
+      /* Cart icon badge pop */
+      @keyframes cart-badge-pop {
+        0% { transform: scale(0); }
+        50% { transform: scale(1.4); }
+        100% { transform: scale(1); }
+      }
+
+      /* Search button in navbar */
+      .nav-icon-btn {
+        position: relative;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .nav-icon-btn:hover {
+        transform: translateY(-2px) scale(1.1);
+      }
+      .nav-icon-btn::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--color-blue-500);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+      .nav-icon-btn:hover::after {
+        width: 70%;
+      }
+
+      /* Mobile menu link enhanced */
+      .mobile-link {
+        position: relative;
+        overflow: hidden;
+      }
+      .mobile-link::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 3px;
+        height: 100%;
+        background: var(--color-blue-500);
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+      }
+      .mobile-link:hover::before,
+      .mobile-link.active::before {
+        transform: scaleY(1);
+      }
+
+      /* Shimmer text effect on brand */
+      @keyframes shimmer-text {
+        0% { background-position: -200% center; }
+        100% { background-position: 200% center; }
+      }
+      .brand-text {
+        background: linear-gradient(90deg, #fff 0%, var(--color-blue-400) 50%, #fff 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer-text 4s linear infinite;
+      }
+
+      /* Navbar background gradient on scroll */
+      .navbar-scrolled {
+        background: rgba(0, 0, 0, 0.92) !important;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Cart counter micro animation */
+      @keyframes counter-bump {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+      }
+      .counter-bump { animation: counter-bump 0.3s ease; }
+
+      /* Icon rotation on hover for menu */
+      .menu-toggle-icon {
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .menu-toggle-active .menu-toggle-icon {
+        transform: rotate(180deg);
+      }
     </style>
     <script>
       tailwind.config = {
@@ -51,123 +455,205 @@
     </script>
   </head>
   <body class="selection:bg-blue-600 selection:text-white antialiased">
+    <!-- ========== NAVBAR ========== -->
     <nav
-      class="fixed w-full z-50 bg-black/90 backdrop-blur-md border-b border-gray-800"
+      id="navbar"
+      class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-transparent transition-all duration-500"
     >
+      <!-- Top decorative line -->
+      <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-20">
+        <div class="flex justify-between items-center h-16 sm:h-20">
+          <!-- Logo -->
           <a
             href="index.html"
             class="flex-shrink-0 flex items-center gap-2 group"
           >
-            <img
-              src="img/logo.png"
-              alt="TECHZONEUY"
-              class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover transition-transform duration-300 group-hover:rotate-12"
-            />
+            <div class="relative">
+              <img
+                src="img/logo.png"
+                alt="TECHZONEUY"
+                class="logo-glow w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110 relative z-10"
+              />
+              <div class="absolute inset-0 rounded-full bg-blue-500/0 group-hover:bg-blue-500/20 blur-md transition-all duration-500"></div>
+            </div>
             <div class="hidden sm:block">
-              <span class="text-xl font-bold tracking-[0.2em] uppercase"
-                >TECH<span class="text-blue-600">ZONE</span></span
+              <span class="brand-text text-lg sm:text-xl font-bold tracking-[0.2em] uppercase"
+                >TECH<span class="text-blue-500" style="-webkit-text-fill-color: #3b82f6;">ZONE</span></span
               >
             </div>
           </a>
-          <div class="hidden md:flex items-center space-x-8">
-            <a href="index.html" class="text-blue-500 font-medium">Inicio</a>
+
+          <!-- Desktop nav links -->
+          <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
             <a
-              href="catalogo.html"
-              class="text-gray-300 hover:text-blue-500 transition-colors font-medium"
-              >Catálogo</a
+              href="index.html"
+              class="nav-link active text-blue-500 font-medium text-sm lg:text-base flex items-center gap-1.5"
             >
-            <a
-              href="catalogo.html#contacto"
-              class="text-gray-300 hover:text-blue-500 transition-colors font-medium"
-              >Contacto</a
-            >
-          </div>
-          <div class="flex items-center gap-4">
-            <a
-              href="catalogo.html"
-              class="relative p-2 text-gray-300 hover:text-blue-500 transition-colors"
-            >
-              <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+              <i data-lucide="home" class="w-4 h-4 opacity-70"></i>
+              Inicio
             </a>
+            <a
+              href="index.html#features"
+              class="nav-link text-gray-300 font-medium text-sm lg:text-base flex items-center gap-1.5"
+            >
+              <i data-lucide="sparkles" class="w-4 h-4 opacity-70"></i>
+              Features
+            </a>
+            <a
+              href="index.html#categorias"
+              class="nav-link text-gray-300 font-medium text-sm lg:text-base flex items-center gap-1.5"
+            >
+              <i data-lucide="layout-grid" class="w-4 h-4 opacity-70"></i>
+              Categorías
+            </a>
+            <a
+              href="catalogo.html"
+              class="nav-link text-gray-300 font-medium text-sm lg:text-base flex items-center gap-1.5"
+            >
+              <i data-lucide="package" class="w-4 h-4 opacity-70"></i>
+              Catálogo
+            </a>
+            <a
+              href="contacto.html"
+              class="nav-link text-gray-300 font-medium text-sm lg:text-base flex items-center gap-1.5"
+            >
+              <i data-lucide="mail" class="w-4 h-4 opacity-70"></i>
+              Contacto
+            </a>
+          </div>
+
+          <!-- Right side actions -->
+          <div class="flex items-center gap-1 sm:gap-2">
+
+            <!-- Mobile menu button -->
             <button
               id="mobile-menu-btn"
-              class="md:hidden p-2 text-gray-300 hover:text-white transition-colors"
+              class="nav-icon-btn md:hidden p-2 text-gray-300 hover:text-white"
               aria-label="Menu"
             >
-              <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
-              <i data-lucide="x" id="close-icon" class="w-6 h-6 hidden"></i>
+              <i data-lucide="menu" id="menu-icon" class="menu-toggle-icon w-5 h-5 sm:w-6 sm:h-6"></i>
+              <i data-lucide="x" id="close-icon" class="menu-toggle-icon w-5 h-5 sm:w-6 sm:h-6 hidden"></i>
             </button>
           </div>
         </div>
       </div>
+
+      <!-- Mobile Menu -->
       <div
         id="mobile-menu"
-        class="hidden md:hidden bg-gray-900 border-b border-gray-800 absolute w-full left-0"
+        class="hidden md:hidden bg-gray-900/95 backdrop-blur-xl border-b border-gray-800 absolute w-full left-0 shadow-2xl"
       >
-        <div class="px-4 pt-2 pb-6 space-y-2">
+        <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+        <div class="px-4 pt-3 pb-6 space-y-1">
           <a
             href="index.html"
-            class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-blue-500 hover:bg-gray-800 rounded-md"
-            >Inicio</a
+            class="mobile-link active block px-4 py-3 text-base font-medium text-blue-400 bg-blue-600/10 rounded-lg flex items-center gap-3"
           >
+            <i data-lucide="home" class="w-4 h-4"></i>
+            Inicio
+          </a>
+          <a
+            href="index.html#features"
+            class="mobile-link block px-4 py-3 text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-3"
+          >
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            Features
+          </a>
+          <a
+            href="index.html#categorias"
+            class="mobile-link block px-4 py-3 text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-3"
+          >
+            <i data-lucide="layout-grid" class="w-4 h-4"></i>
+            Categorías
+          </a>
           <a
             href="catalogo.html"
-            class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-blue-500 hover:bg-gray-800 rounded-md"
-            >Catálogo</a
+            class="mobile-link block px-4 py-3 text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-3"
           >
+            <i data-lucide="package" class="w-4 h-4"></i>
+            Catálogo
+          </a>
           <a
-            href="catalogo.html#contacto"
-            class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-blue-500 hover:bg-gray-800 rounded-md"
-            >Contacto</a
+            href="contacto.html"
+            class="mobile-link block px-4 py-3 text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg transition-all flex items-center gap-3"
           >
+            <i data-lucide="mail" class="w-4 h-4"></i>
+            Contacto
+          </a>
         </div>
       </div>
     </nav>
 
     <main class="pt-20">
+      <!-- ========== HERO ========== -->
       <section
         id="inicio"
-        class="relative bg-gradient-to-br from-black via-gray-900 to-black py-20 lg:py-32 overflow-hidden min-h-[85vh] flex items-center"
+        class="relative bg-gradient-to-br from-black via-gray-900 to-black py-20 lg:py-32 overflow-hidden min-h-[90vh] flex items-center"
       >
-        <div
-          class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"
-        ></div>
-        <div
-          class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-blue-900/20 rounded-full blur-3xl pointer-events-none"
-        ></div>
+        <!-- Animated blobs -->
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none anim-blob"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-blue-900/20 rounded-full blur-3xl pointer-events-none anim-blob" style="animation-delay: -3s"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-700/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Grid background -->
+        <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(59,130,246,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.5) 1px, transparent 1px); background-size: 50px 50px;"></div>
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div class="fade-up">
-              <h1
-                class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight mb-4 sm:mb-6"
-              >
+              <div class="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full glass border-blue-500/30">
+                <span class="w-2 h-2 bg-blue-500 rounded-full anim-pulse-ring"></span>
+                <span class="text-xs sm:text-sm font-medium text-blue-400 tracking-wider uppercase">Nueva colección 2026</span>
+              </div>
+              <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight mb-4 sm:mb-6 leading-tight">
                 Tu Mundo Tech,<br />
                 <span
-                  class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600"
+                  class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 anim-gradient"
                   >Al Siguiente Nivel.</span
                 >
               </h1>
-              <p
-                class="text-base sm:text-lg text-gray-400 mb-6 sm:mb-8 max-w-lg"
-              >
-                Encuentra los mejores accesorios para tus dispositivos.
-                Auriculares, parlantes, fundas y cargadores con la garantía de
-                TECHZONEUY.
+              <p class="text-base sm:text-lg text-gray-400 mb-6 sm:mb-8 max-w-lg leading-relaxed">
+                Accesorios premium para tus dispositivos. Auriculares, parlantes, fundas y cargadores con la garantía y respaldo de TECHZONEUY.
               </p>
               <div class="flex flex-col sm:flex-row gap-4">
                 <a
                   href="catalogo.html"
-                  class="inline-flex justify-center items-center px-8 py-4 text-base font-bold rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)]"
+                  class="btn-primary inline-flex justify-center items-center px-8 py-4 text-base font-bold rounded-xl text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)]"
                 >
                   Ver Catálogo
                   <i data-lucide="chevron-right" class="ml-2 w-5 h-5"></i>
                 </a>
+                <a
+                  href="#features"
+                  class="inline-flex justify-center items-center px-8 py-4 text-base font-bold rounded-xl text-gray-300 glass hover:border-blue-500 hover:text-white transition-all duration-300"
+                >
+                  Conocé más
+                </a>
+              </div>
+
+              <!-- Hero stats -->
+              <div class="grid grid-cols-3 gap-4 mt-10 sm:mt-12 fade-up" style="transition-delay: 0.3s">
+                <div class="border-l-2 border-blue-600 pl-3">
+                  <p class="text-2xl sm:text-3xl font-black text-white">+500</p>
+                  <p class="text-xs sm:text-sm text-gray-500">Clientes felices</p>
+                </div>
+                <div class="border-l-2 border-blue-600 pl-3">
+                  <p class="text-2xl sm:text-3xl font-black text-white">100%</p>
+                  <p class="text-xs sm:text-sm text-gray-500">Originales</p>
+                </div>
+                <div class="border-l-2 border-blue-600 pl-3">
+                  <p class="text-2xl sm:text-3xl font-black text-white">24h</p>
+                  <p class="text-xs sm:text-sm text-gray-500">Envío rápido</p>
+                </div>
               </div>
             </div>
+
+            <!-- Carousel -->
             <div
               class="h-[350px] sm:h-[450px] lg:h-[500px] w-full perspective-1000 relative flex items-center justify-center fade-in"
+              style="transition-delay: 0.2s"
             >
               <div
                 id="hero-carousel"
@@ -177,91 +663,212 @@
           </div>
         </div>
       </section>
-    </main>
 
-    <footer
-      id="contacto"
-      class="bg-black border-t border-gray-900 pt-10 sm:pt-12 pb-6 sm:pb-8"
-    >
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div
-          class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8"
-        >
-          <div class="fade-up">
-            <div class="flex items-center gap-2 mb-3 sm:mb-4">
-              <img
-                src="img/logo.png"
-                alt="TECHZONEUY"
-                class="w-8 h-8 rounded-full object-cover"
-              />
-              <span class="text-xl font-bold tracking-[0.2em] uppercase"
-                >TECH<span class="text-blue-600">ZONE</span></span
-              >
-            </div>
-            <p class="text-gray-400 max-w-sm text-xs sm:text-sm">
-              Tu tienda de confianza para accesorios tecnológicos.
-            </p>
-          </div>
-          <div class="fade-up" style="transition-delay: 0.1s">
-            <h4 class="text-white font-bold mb-3 sm:mb-4 text-sm sm:text-base">
-              Contacto
-            </h4>
-            <ul class="space-y-2 text-gray-400 text-sm">
-              <li class="flex items-center gap-2">
-                <i data-lucide="map-pin" class="w-4 h-4 text-blue-500"></i>
-                Direccion: Uruguay - Santa Lucía
-              </li>
-              <li class="flex items-center gap-2">
-                <i data-lucide="instagram" class="w-4 h-4 text-blue-500"></i>
-                Instagram: techzoneuy
-              </li>
-              <li class="flex items-center gap-2">
-                <i data-lucide="phone" class="w-4 h-4 text-blue-500"></i> +598
-                92 486 156
-              </li>
-            </ul>
+      <!-- ========== MARQUEE ========== -->
+      <section class="py-6 sm:py-8 bg-gray-900/50 border-y border-gray-800 overflow-hidden">
+        <div class="flex whitespace-nowrap">
+          <div class="marquee-track flex gap-12 sm:gap-16 items-center text-gray-500 font-bold tracking-[0.3em] text-sm sm:text-base">
+            <span class="flex items-center gap-3"><i data-lucide="zap" class="w-5 h-5 text-blue-500"></i> ENVÍO RÁPIDO</span>
+            <span class="flex items-center gap-3"><i data-lucide="shield-check" class="w-5 h-5 text-blue-500"></i> PRODUCTOS ORIGINALES</span>
+            <span class="flex items-center gap-3"><i data-lucide="credit-card" class="w-5 h-5 text-blue-500"></i> PAGOS SEGUROS</span>
+            <span class="flex items-center gap-3"><i data-lucide="headphones" class="w-5 h-5 text-blue-500"></i> SOPORTE 24/7</span>
+            <span class="flex items-center gap-3"><i data-lucide="award" class="w-5 h-5 text-blue-500"></i> GARANTÍA OFICIAL</span>
+            <!-- duplicate for seamless loop -->
+            <span class="flex items-center gap-3"><i data-lucide="zap" class="w-5 h-5 text-blue-500"></i> ENVÍO RÁPIDO</span>
+            <span class="flex items-center gap-3"><i data-lucide="shield-check" class="w-5 h-5 text-blue-500"></i> PRODUCTOS ORIGINALES</span>
+            <span class="flex items-center gap-3"><i data-lucide="credit-card" class="w-5 h-5 text-blue-500"></i> PAGOS SEGUROS</span>
+            <span class="flex items-center gap-3"><i data-lucide="headphones" class="w-5 h-5 text-blue-500"></i> SOPORTE 24/7</span>
+            <span class="flex items-center gap-3"><i data-lucide="award" class="w-5 h-5 text-blue-500"></i> GARANTÍA OFICIAL</span>
           </div>
         </div>
-        <div
-          class="border-t border-gray-900 pt-5 sm:pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500"
-        >
-          <p>
-            &copy; 2026 TechZone UY. Todos los derechos reservados.
-            <a href="admin.html" class="text-gray-700 hover:text-gray-500">.</a>
-          </p>
-          <div class="flex items-center gap-4">
-            <a
-              href="#"
-              class="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300"
-              ><i data-lucide="instagram" class="w-4 h-4"></i
-            ></a>
-            <a
-              href="#"
-              class="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300"
-              ><i data-lucide="facebook" class="w-4 h-4"></i
-            ></a>
-            <a
-              href="#"
-              class="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300"
-              ><i data-lucide="twitter" class="w-4 h-4"></i
-            ></a>
+      </section>
+
+      <!-- ========== FEATURES ========== -->
+      <section id="features" class="py-16 sm:py-24 bg-black relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-blue-950/10 to-transparent pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div class="text-center mb-12 sm:mb-16 fade-up">
+            <span class="inline-block px-4 py-1 mb-4 text-xs font-bold tracking-widest uppercase text-blue-400 bg-blue-500/10 rounded-full border border-blue-500/20">Por qué elegirnos</span>
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4">
+              La <span class="text-blue-500">experiencia</span> que merecés
+            </h2>
+            <p class="text-gray-400 max-w-2xl mx-auto text-base sm:text-lg">
+              Cada producto está seleccionado para brindarte calidad, diseño y la última tecnología.
+            </p>
           </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div class="feature-card glass rounded-2xl p-6 fade-up">
+              <div class="feature-icon w-14 h-14 mb-5 rounded-xl bg-blue-600/20 flex items-center justify-center">
+                <i data-lucide="truck" class="w-7 h-7 text-blue-400"></i>
+              </div>
+              <h3 class="text-lg font-bold mb-2">Envío Express</h3>
+              <p class="text-gray-400 text-sm leading-relaxed">Recibí tu pedido en 24-48hs en Montevideo y zona metropolitana.</p>
+            </div>
+            <div class="feature-card glass rounded-2xl p-6 fade-up" style="transition-delay: 0.1s">
+              <div class="feature-icon w-14 h-14 mb-5 rounded-xl bg-blue-600/20 flex items-center justify-center">
+                <i data-lucide="shield-check" class="w-7 h-7 text-blue-400"></i>
+              </div>
+              <h3 class="text-lg font-bold mb-2">100% Originales</h3>
+              <p class="text-gray-400 text-sm leading-relaxed">Productos originales con garantía oficial del fabricante.</p>
+            </div>
+            <div class="feature-card glass rounded-2xl p-6 fade-up" style="transition-delay: 0.2s">
+              <div class="feature-icon w-14 h-14 mb-5 rounded-xl bg-blue-600/20 flex items-center justify-center">
+                <i data-lucide="message-circle" class="w-7 h-7 text-blue-400"></i>
+              </div>
+              <h3 class="text-lg font-bold mb-2">Atención Directa</h3>
+              <p class="text-gray-400 text-sm leading-relaxed">Respondemos tus consultas al instante vía WhatsApp.</p>
+            </div>
+            <div class="feature-card glass rounded-2xl p-6 fade-up" style="transition-delay: 0.3s">
+              <div class="feature-icon w-14 h-14 mb-5 rounded-xl bg-blue-600/20 flex items-center justify-center">
+                <i data-lucide="credit-card" class="w-7 h-7 text-blue-400"></i>
+              </div>
+              <h3 class="text-lg font-bold mb-2">Pagos Flexibles</h3>
+              <p class="text-gray-400 text-sm leading-relaxed">Efectivo, transferencia, MercadoPago y todas las tarjetas.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider max-w-5xl mx-auto"></div>
+
+      <!-- ========== CATEGORIES ========== -->
+      <section id="categorias" class="py-16 sm:py-24 bg-black relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-12 sm:mb-16 fade-up">
+            <span class="inline-block px-4 py-1 mb-4 text-xs font-bold tracking-widest uppercase text-blue-400 bg-blue-500/10 rounded-full border border-blue-500/20">Explorá</span>
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4">
+              Nuestras <span class="text-blue-500">categorías</span>
+            </h2>
+            <p class="text-gray-400 max-w-2xl mx-auto text-base sm:text-lg">
+              Encontrá exactamente lo que buscás para tu dispositivo.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <a href="catalogo.html#filtro" class="category-card aspect-[4/5] rounded-2xl border border-gray-800 bg-gray-900 overflow-hidden block fade-up group">
+              <img src="img/airpods-pro.png" class="category-img absolute inset-0 w-full h-full object-contain p-8 opacity-90" />
+              <div class="absolute inset-0 z-10 flex flex-col justify-end p-6">
+                <span class="text-xs text-blue-400 font-bold tracking-widest uppercase mb-1">01</span>
+                <h3 class="text-2xl font-black text-white mb-1">AirPods</h3>
+                <p class="text-sm text-gray-300 flex items-center gap-1 group-hover:text-blue-400 transition-colors">
+                  Explorar <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-2"></i>
+                </p>
+              </div>
+            </a>
+            <a href="catalogo.html#filtro" class="category-card aspect-[4/5] rounded-2xl border border-gray-800 bg-gray-900 overflow-hidden block fade-up group" style="transition-delay: 0.1s">
+              <img src="img/jbl-tune-760.png" class="category-img absolute inset-0 w-full h-full object-contain p-8 opacity-90" />
+              <div class="absolute inset-0 z-10 flex flex-col justify-end p-6">
+                <span class="text-xs text-blue-400 font-bold tracking-widest uppercase mb-1">02</span>
+                <h3 class="text-2xl font-black text-white mb-1">Auriculares</h3>
+                <p class="text-sm text-gray-300 flex items-center gap-1 group-hover:text-blue-400 transition-colors">
+                  Explorar <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-2"></i>
+                </p>
+              </div>
+            </a>
+            <a href="catalogo.html#filtro" class="category-card aspect-[4/5] rounded-2xl border border-gray-800 bg-gray-900 overflow-hidden block fade-up group" style="transition-delay: 0.2s">
+              <img src="img/jbl-flip-6.png" class="category-img absolute inset-0 w-full h-full object-contain p-8 opacity-90" />
+              <div class="absolute inset-0 z-10 flex flex-col justify-end p-6">
+                <span class="text-xs text-blue-400 font-bold tracking-widest uppercase mb-1">03</span>
+                <h3 class="text-2xl font-black text-white mb-1">Parlantes</h3>
+                <p class="text-sm text-gray-300 flex items-center gap-1 group-hover:text-blue-400 transition-colors">
+                  Explorar <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-2"></i>
+                </p>
+              </div>
+            </a>
+            <a href="catalogo.html#filtro" class="category-card aspect-[4/5] rounded-2xl border border-gray-800 bg-gray-900 overflow-hidden block fade-up group">
+              <img src="img/funda-magsafe-colores.png" class="category-img absolute inset-0 w-full h-full object-contain p-8 opacity-90" />
+              <div class="absolute inset-0 z-10 flex flex-col justify-end p-6">
+                <span class="text-xs text-blue-400 font-bold tracking-widest uppercase mb-1">04</span>
+                <h3 class="text-2xl font-black text-white mb-1">Fundas</h3>
+                <p class="text-sm text-gray-300 flex items-center gap-1 group-hover:text-blue-400 transition-colors">
+                  Explorar <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-2"></i>
+                </p>
+              </div>
+            </a>
+            <a href="catalogo.html#filtro" class="category-card aspect-[4/5] rounded-2xl border border-gray-800 bg-gray-900 overflow-hidden block fade-up group" style="transition-delay: 0.1s">
+              <img src="img/kit-ficha-20w.png" class="category-img absolute inset-0 w-full h-full object-contain p-8 opacity-90" />
+              <div class="absolute inset-0 z-10 flex flex-col justify-end p-6">
+                <span class="text-xs text-blue-400 font-bold tracking-widest uppercase mb-1">05</span>
+                <h3 class="text-2xl font-black text-white mb-1">Cargadores</h3>
+                <p class="text-sm text-gray-300 flex items-center gap-1 group-hover:text-blue-400 transition-colors">
+                  Explorar <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-2"></i>
+                </p>
+              </div>
+            </a>
+            <a href="catalogo.html" class="category-card aspect-[4/5] rounded-2xl border border-blue-600/40 bg-gradient-to-br from-blue-900/30 to-gray-900 overflow-hidden block fade-up group flex items-center justify-center" style="transition-delay: 0.2s">
+              <div class="text-center p-6 z-10">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-600/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <i data-lucide="plus" class="w-8 h-8 text-blue-400"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white mb-2">Ver todo</h3>
+                <p class="text-sm text-gray-300">Catálogo completo</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== CTA ========== -->
+      <section class="py-16 sm:py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-black to-black"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center scale-in">
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4 sm:mb-6">
+            ¿Listo para <span class="text-blue-500">elevar</span> tu experiencia tech?
+          </h2>
+          <p class="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto mb-8">
+            Visitá nuestro catálogo y descubrí todos los productos que tenemos para vos.
+          </p>
+          <a
+            href="catalogo.html"
+            class="btn-primary inline-flex items-center px-10 py-5 text-base font-bold rounded-xl text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 shadow-[0_0_30px_rgba(37,99,235,0.5)] hover:shadow-[0_0_50px_rgba(37,99,235,0.8)]"
+          >
+            Explorar Catálogo
+            <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="bg-black border-t border-gray-900 pt-8 sm:pt-10 pb-6 sm:pb-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs sm:text-sm text-gray-500">
+          <div class="flex items-center gap-2">
+            <img src="img/logo.png" alt="TECHZONEUY" class="w-7 h-7 rounded-full object-cover" />
+            <span class="font-bold tracking-[0.2em] uppercase">TECH<span class="text-blue-600">ZONE</span></span>
+          </div>
+          <p>
+              &copy; 2026 TechZone UY. Todos los derechos reservados.
+              <a href="contacto.html" class="text-gray-400 hover:text-blue-500 transition-colors">Contacto</a>
+          </p>
         </div>
       </div>
     </footer>
 
-    <!-- Botón flotante WhatsApp -->
+    <!-- WhatsApp floating button -->
     <a
       href="https://api.whatsapp.com/send?phone=59892486156&text=Hola!%20Vi%20su%20cat%C3%A1logo%20y%20quer%C3%ADa%20saber%20si%20me%20puede%20asesorar%20con%20un%20producto%20que%20estoy%20buscando%3F%20%C2%A1Gracias!%20%F0%9F%91%8B"
       target="_blank"
-      class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-40 pulse-blue"
+      class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-40 pulse-whatsapp"
     >
       <i data-lucide="message-circle" class="w-6 h-6"></i>
     </a>
 
+    <!-- Scroll to top -->
+    <button
+      id="scroll-top"
+      class="hidden fixed bottom-6 left-6 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-40"
+    >
+      <i data-lucide="chevron-up" class="w-5 h-5"></i>
+    </button>
+
     <script>
       lucide.createIcons();
 
+      // Mobile menu
       const mobileMenuBtn = document.getElementById("mobile-menu-btn");
       const mobileMenu = document.getElementById("mobile-menu");
       const menuIcon = document.getElementById("menu-icon");
@@ -280,6 +887,32 @@
         });
       });
 
+      // Navbar scroll effect
+      const navbar = document.getElementById("navbar");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 50) {
+          navbar.classList.add("border-gray-800", "bg-black/95");
+          navbar.classList.remove("border-transparent", "bg-black/80");
+        } else {
+          navbar.classList.remove("border-gray-800", "bg-black/95");
+          navbar.classList.add("border-transparent", "bg-black/80");
+        }
+      });
+
+      // Scroll to top
+      const scrollTopBtn = document.getElementById("scroll-top");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 500) {
+          scrollTopBtn.classList.remove("hidden");
+          scrollTopBtn.classList.add("flex");
+        } else {
+          scrollTopBtn.classList.add("hidden");
+          scrollTopBtn.classList.remove("flex");
+        }
+      });
+      scrollTopBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+      // Carousel
       let carouselData = [];
       const carouselContainer = document.getElementById("hero-carousel");
       let currentIdx = 0;
@@ -323,7 +956,7 @@
             const isMobile = window.innerWidth < 640;
             const cardW = isMobile ? 240 : 320;
             const imgW = isMobile ? 'w-32 h-32' : 'w-48 h-48';
-            card.className = "carousel-card bg-gray-900 border border-gray-700 rounded-3xl cursor-pointer flex flex-col items-center";
+            card.className = "carousel-card bg-gray-900/80 backdrop-blur-md border border-gray-700 rounded-3xl cursor-pointer flex flex-col items-center hover:border-blue-500 transition-colors";
             card.style.width = cardW + 'px';
             card.innerHTML = `<img src="${item.img}" class="product-img ${imgW} mb-4 sm:mb-6 rounded-xl object-contain">
               <h3 class="text-base sm:text-xl font-bold mb-1 sm:mb-2 px-4 text-center">${item.title}</h3>
@@ -353,10 +986,10 @@
         }
       }, 4000);
 
-      // Scroll Animations
+      // Scroll animations (IntersectionObserver)
       const observerOptions = {
-        threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px",
+        threshold: 0.12,
+        rootMargin: "0px 0px -60px 0px",
       };
 
       const observer = new IntersectionObserver((entries) => {
@@ -367,13 +1000,13 @@
         });
       }, observerOptions);
 
-      document.querySelectorAll(".fade-up, .fade-in").forEach((el) => {
+      document.querySelectorAll(".fade-up, .fade-in, .scale-in, .slide-right, .slide-left, .rotate-in").forEach((el) => {
         observer.observe(el);
       });
 
-      // Trigger initial animations
+      // Trigger initial hero animations
       setTimeout(() => {
-        document.querySelectorAll(".fade-up").forEach((el) => {
+        document.querySelectorAll("#inicio .fade-up, #inicio .fade-in").forEach((el) => {
           el.classList.add("visible");
         });
       }, 100);
