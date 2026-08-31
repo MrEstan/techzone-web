@@ -15,7 +15,7 @@ $action = $_GET['action'] ?? '';
 
 switch ($action) {
     case 'list':
-        $stmt = $pdo->query("SELECT * FROM products ORDER BY FIELD(category, 'airpods', 'auriculares', 'parlantes', 'fundas', 'cargadores'), FIELD(brand, 'Apple', 'JBL', ''), name");
+        $stmt = $pdo->query("SELECT * FROM products ORDER BY FIELD(category, 'airpods', 'auriculares', 'parlantes', 'fundas', 'cargadores', 'accesorios'), FIELD(brand, 'Apple', 'JBL', ''), name");
         $products = $stmt->fetchAll();
         echo json_encode($products);
         break;
