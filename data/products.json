@@ -1,155 +1,155 @@
 [
-  {
-    "id": 1,
-    "name": "AirPods Pro",
-    "brand": "Apple",
-    "description": "Disfrutá de un sonido de alta calidad con cancelación activa de ruido, ajuste cómodo y experiencia inalámbrica ideal.",
-    "price": 2000,
-    "category": "airpods",
-    "image": "img/airpods-pro.png"
-  },
-  {
-    "id": 2,
-    "name": "AirPods 4 (ANC)",
-    "brand": "Apple",
-    "description": "Los nuevos AirPods 4 con Cancelación Activa de Ruido (ANC) ofrecen un sonido más profundo y detallado.",
-    "price": 2000,
-    "category": "airpods",
-    "image": "img/airpods-4-anc.png"
-  },
-  {
-    "id": 3,
-    "name": "AirPods Max",
-    "brand": "Apple",
-    "description": "Los AirPods Max ofrecen un sonido potente y nítido, con un diseño cómodo y elegante.",
-    "price": 2200,
-    "category": "airpods",
-    "image": "img/airpods-max.png"
-  },
-  {
-    "id": 4,
-    "name": "JBL TUNE 760",
-    "brand": "JBL",
-    "description": "Auriculares inalámbricos con JBL Pure Bass, cancelación activa de ruido, Bluetooth y micrófono.",
-    "price": 1800,
-    "category": "auriculares",
-    "image": "img/jbl-tune-760.png"
-  },
-  {
-    "id": 5,
-    "name": "JBL WAVE 300tws",
-    "brand": "JBL",
-    "description": "Auriculares inalámbricos con JBL Deep Bass, Bluetooth, micrófono integrado. Ideales para el día a día.",
-    "price": 1000,
-    "category": "auriculares",
-    "image": "img/jbl-wave-300.png"
-  },
-  {
-    "id": 6,
-    "name": "JBL TUNE 220",
-    "brand": "JBL",
-    "description": "Auriculares inalámbricos con JBL Pure Bass, Bluetooth, micrófono y diseño cómodo y liviano.",
-    "price": 1400,
-    "category": "auriculares",
-    "image": "img/jbl-tune-220.png"
-  },
-  {
-    "id": 7,
-    "name": "JBL FLIP 6",
-    "brand": "JBL",
-    "description": "Parlante Bluetooth portátil con sonido potente, resistencia al agua y batería de larga duración.",
-    "price": 2000,
-    "category": "parlantes",
-    "image": "img/jbl-flip-6.png"
-  },
-  {
-    "id": 8,
-    "name": "JBL Charge 5",
-    "brand": "JBL",
-    "description": "Parlante Bluetooth portátil con sonido potente, resistencia al agua. Ideal para fiestas y viajes.",
-    "price": 2200,
-    "category": "parlantes",
-    "image": "img/jbl-charge-5.png"
-  },
-  {
-    "id": 9,
-    "name": "JBL GO 3",
-    "brand": "JBL",
-    "description": "Parlante Bluetooth compacto con sonido potente, resistente al agua. Ideal para llevar a cualquier lugar.",
-    "price": 800,
-    "category": "parlantes",
-    "image": "img/jbl-go-3.png"
-  },
-  {
-    "id": 10,
-    "name": "Funda MagSafe de Colores",
-    "brand": "Apple",
-    "description": "Funda compatible MagSafe con imanes integrados. Variedad de colores disponibles.",
-    "price": 300,
-    "category": "fundas",
-    "image": "img/funda-magsafe-colores.png"
-  },
-  {
-    "id": 11,
-    "name": "Templado iPhone Autoaplicable",
-    "brand": "Apple",
-    "description": "Templado autoaplicable para iPhone. Fácil instalación y máxima protección.",
-    "price": 400,
-    "category": "fundas",
-    "image": "img/templado-iphone.png"
-  },
-  {
-    "id": 12,
-    "name": "Funda Silicona",
-    "brand": "Apple",
-    "description": "Funda de silicona suave y resistente. Protección completa para tu dispositivo.",
-    "price": 300,
-    "category": "fundas",
-    "image": "img/funda-silicona.png"
-  },
-  {
-    "id": 13,
-    "name": "Funda MagSafe Apple",
-    "brand": "Apple",
-    "description": "Funda original Apple con MagSafe. Diseño premium y compatibilidad total.",
-    "price": 300,
-    "category": "fundas",
-    "image": "img/funda-magsafe-apple.png"
-  },
-  {
-    "id": 14,
-    "name": "Kit Ficha 20W + Cable",
-    "brand": "Apple",
-    "description": "Kit de carga rápida con adaptador de 20W y cable incluido. Carga rápida, segura y eficiente.",
-    "price": 400,
-    "category": "cargadores",
-    "image": "img/kit-ficha-20w.png"
-  },
-  {
-    "id": 15,
-    "name": "Kit Ficha 20W + Cable C-C",
-    "brand": "Apple",
-    "description": "Kit de carga rápida con adaptador de 20W y cable USB-C incluido.",
-    "price": 400,
-    "category": "cargadores",
-    "image": "img/kit-ficha-20w-cc.png"
-  },
-  {
-    "id": 16,
-    "name": "Cargador MagSafe iPhone",
-    "brand": "Apple",
-    "description": "Cargador inalámbrico magnético compatible con iPhone MagSafe. Carga de alta velocidad.",
-    "price": 600,
-    "category": "cargadores",
-    "image": "img/cargador-magsafe.png"
-  },
-  {
-    "id": 17,
-    "name": "Batería MagSafe Apple",
-    "brand": "Apple",
-    "description": "Batería externa MagSafe. Se acopla magnéticamente al iPhone para carga inalámbrica rápida.",
-    "price": 1100,
-    "category": "cargadores",
-    "image": "img/bateria-magsafe.png"
-  }
+    {
+        "id": 1,
+        "name": "AirPods Pro",
+        "brand": "Apple",
+        "description": "Disfrutá de un sonido de alta calidad con cancelación activa de ruido, ajuste cómodo y experiencia inalámbrica ideal.",
+        "price": 2000,
+        "category": "airpods",
+        "image": "img/airpods-pro.png"
+    },
+    {
+        "id": 2,
+        "name": "AirPods 4 (ANC)",
+        "brand": "Apple",
+        "description": "Los nuevos AirPods 4 con Cancelación Activa de Ruido (ANC) ofrecen un sonido más profundo y detallado.",
+        "price": 2000,
+        "category": "airpods",
+        "image": "img/airpods-4-anc.png"
+    },
+    {
+        "id": 3,
+        "name": "AirPods Max",
+        "brand": "Apple",
+        "description": "Los AirPods Max ofrecen un sonido potente y nítido, con un diseño cómodo y elegante.",
+        "price": 2200,
+        "category": "airpods",
+        "image": "img/airpods-max.png"
+    },
+    {
+        "id": 4,
+        "name": "JBL TUNE 760",
+        "brand": "JBL",
+        "description": "Auriculares inalámbricos con JBL Pure Bass, cancelación activa de ruido, Bluetooth y micrófono.",
+        "price": 1800,
+        "category": "auriculares",
+        "image": "img/jbl-tune-760.png"
+    },
+    {
+        "id": 5,
+        "name": "JBL WAVE 300tws",
+        "brand": "JBL",
+        "description": "Auriculares inalámbricos con JBL Deep Bass, Bluetooth, micrófono integrado. Ideales para el día a día.",
+        "price": 1000,
+        "category": "auriculares",
+        "image": "img/jbl-wave-300.png"
+    },
+    {
+        "id": 6,
+        "name": "JBL TUNE 220",
+        "brand": "JBL",
+        "description": "Auriculares inalámbricos con JBL Pure Bass, Bluetooth, micrófono y diseño cómodo y liviano.",
+        "price": 1400,
+        "category": "auriculares",
+        "image": "img/jbl-tune-220.png"
+    },
+    {
+        "id": 7,
+        "name": "JBL FLIP 6",
+        "brand": "JBL",
+        "description": "Parlante Bluetooth portátil con sonido potente, resistencia al agua y batería de larga duración.",
+        "price": 2000,
+        "category": "parlantes",
+        "image": "img/jbl-flip-6.png"
+    },
+    {
+        "id": 8,
+        "name": "JBL Charge 5",
+        "brand": "JBL",
+        "description": "Parlante Bluetooth portátil con sonido potente, resistencia al agua. Ideal para fiestas y viajes.",
+        "price": 2200,
+        "category": "parlantes",
+        "image": "img/jbl-charge-5.png"
+    },
+    {
+        "id": 9,
+        "name": "JBL GO 3",
+        "brand": "JBL",
+        "description": "Parlante Bluetooth compacto con sonido potente, resistente al agua. Ideal para llevar a cualquier lugar.",
+        "price": 800,
+        "category": "parlantes",
+        "image": "img/jbl-go-3.png"
+    },
+    {
+        "id": 10,
+        "name": "Funda MagSafe de Colores",
+        "brand": "Apple",
+        "description": "Funda compatible MagSafe con imanes integrados. Variedad de colores disponibles.",
+        "price": 300,
+        "category": "fundas",
+        "image": "img/funda-magsafe-colores.png"
+    },
+    {
+        "id": 11,
+        "name": "Templado iPhone Autoaplicable",
+        "brand": "Apple",
+        "description": "Templado autoaplicable para iPhone. Fácil instalación y máxima protección.",
+        "price": 400,
+        "category": "fundas",
+        "image": "img/templado-iphone.png"
+    },
+    {
+        "id": 12,
+        "name": "Funda Silicona",
+        "brand": "Apple",
+        "description": "Funda de silicona suave y resistente. Protección completa para tu dispositivo.",
+        "price": 300,
+        "category": "fundas",
+        "image": "img/funda-silicona.png"
+    },
+    {
+        "id": 13,
+        "name": "Funda MagSafe Apple",
+        "brand": "Apple",
+        "description": "Funda original Apple con MagSafe. Diseño premium y compatibilidad total.",
+        "price": 300,
+        "category": "fundas",
+        "image": "img/funda-magsafe-apple.png"
+    },
+    {
+        "id": 14,
+        "name": "Kit Ficha 20W + Cable",
+        "brand": "Apple",
+        "description": "Kit de carga rápida con adaptador de 20W y cable incluido. Carga rápida, segura y eficiente.",
+        "price": 400,
+        "category": "cargadores",
+        "image": "img/kit-ficha-20w.png"
+    },
+    {
+        "id": 15,
+        "name": "Kit Ficha 20W + Cable C-C",
+        "brand": "Apple",
+        "description": "Kit de carga rápida con adaptador de 20W y cable USB-C incluido.",
+        "price": 400,
+        "category": "cargadores",
+        "image": "img/kit-ficha-20w-cc.png"
+    },
+    {
+        "id": 16,
+        "name": "Cargador MagSafe iPhone",
+        "brand": "Apple",
+        "description": "Cargador inalámbrico magnético compatible con iPhone MagSafe. Carga de alta velocidad.",
+        "price": 600,
+        "category": "cargadores",
+        "image": "img/cargador-magsafe.png"
+    },
+    {
+        "id": 17,
+        "name": "Batería MagSafe Apple",
+        "brand": "Apple",
+        "description": "Batería externa MagSafe. Se acopla magnéticamente al iPhone para carga inalámbrica rápida.",
+        "price": 1100,
+        "category": "cargadores",
+        "image": "img/bateria-magsafe.png"
+    }
 ]

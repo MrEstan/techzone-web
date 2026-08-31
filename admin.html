@@ -903,9 +903,6 @@
     <script>
       lucide.createIcons();
 
-      // Clear stale localStorage products (old data with placeholder images)
-      localStorage.removeItem('techzoneuy_products.json');
-
       const API_BASE = 'api';
       let products = [];
       let orders = [];
@@ -1093,14 +1090,7 @@
         showAdminPanel();
       }
 
-      // Auto-refresh
-      setInterval(async () => {
-        if (localStorage.getItem('techzoneuy_admin') === 'true' && !document.getElementById('admin-panel').classList.contains('hidden')) {
-          await loadOrders();
-          await loadProducts();
-          updateStats();
-        }
-      }, 3000);
+      // Auto-refresh eliminado: los productos ahora persisten en data/products.json y solo se recargan tras acciones del usuario
 
       // ========== OBSERVER ==========
       function observeFadeElements() {

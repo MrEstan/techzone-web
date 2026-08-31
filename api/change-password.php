@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../config/database.php';
+require_once __DIR__ . '/../config/database.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -27,19 +27,27 @@ if (strlen($newPassword) < 4) {
     exit();
 }
 
-$stmt = $pdo->prepare("SELECT password FROM admin_users WHERE username = 'admin'");
-$stmt->execute();
-$user = $stmt->fetch();
+$dataFile = __DIR__ . '/../data/admin.json';
+$admin = ['username'=>'admin','password'=>'techzone2024'];
+if (file_exists($dataFile)) {
+    $j = json_decode(file_get_contents($dataFile), true);
+    if (isset($j['username'], $j['password'])) $admin = $j;
+}
 
-if (!$user || !password_verify($currentPassword, $user['password'])) {
+$valid = false;
+if (str_starts_with($admin['password'], '$2y$') || str_starts_with($admin['password'], '$argon')) {
+    $valid = password_verify($currentPassword, $admin['password']);
+} else {
+    $valid = hash_equals($admin['password'], $currentPassword);
+}
+
+if (!$valid) {
     http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'La contraseña actual es incorrecta']);
     exit();
 }
 
-$hashed = password_hash($newPassword, PASSWORD_DEFAULT);
-$stmt = $pdo->prepare("UPDATE admin_users SET password = ? WHERE username = 'admin'");
-$stmt->execute([$hashed]);
+$admin['password'] = $newPassword;
+file_put_contents($dataFile, json_encode($admin, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
 
 echo json_encode(['success' => true, 'message' => 'Contraseña cambiada correctamente']);
-?>

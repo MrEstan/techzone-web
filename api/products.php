@@ -9,44 +9,95 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../config/database.php';
+require_once __DIR__ . '/../config/database.php';
+
+$dataFile = __DIR__ . '/../data/products.json';
+
+function read_products() {
+    global $dataFile;
+    if (!file_exists($dataFile)) return [];
+    $json = file_get_contents($dataFile);
+    $data = json_decode($json, true);
+    return is_array($data) ? $data : [];
+}
+function write_products($list) {
+    global $dataFile;
+    $dir = dirname($dataFile);
+    if (!is_dir($dir)) mkdir($dir, 0777, true);
+    file_put_contents($dataFile, json_encode($list, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), LOCK_EX);
+}
+function sort_products(&$list) {
+    $orderCat = ['airpods'=>1,'auriculares'=>2,'parlantes'=>3,'fundas'=>4,'cargadores'=>5,'accesorios'=>6];
+    $orderBrand = ['Apple'=>1,'JBL'=>2];
+    usort($list, function($a,$b) use ($orderCat,$orderBrand){
+        $ca = $orderCat[$a['category'] ?? ''] ?? 99;
+        $cb = $orderCat[$b['category'] ?? ''] ?? 99;
+        if ($ca !== $cb) return $ca <=> $cb;
+        $ba = $orderBrand[$a['brand'] ?? ''] ?? 99;
+        $bb = $orderBrand[$b['brand'] ?? ''] ?? 99;
+        if ($ba !== $bb) return $ba <=> $bb;
+        return strcmp($a['name'] ?? '', $b['name'] ?? '');
+    });
+}
 
 $action = $_GET['action'] ?? '';
 
 switch ($action) {
     case 'list':
-        $stmt = $pdo->query("SELECT * FROM products ORDER BY FIELD(category, 'airpods', 'auriculares', 'parlantes', 'fundas', 'cargadores', 'accesorios'), FIELD(brand, 'Apple', 'JBL', ''), name");
-        $products = $stmt->fetchAll();
-        echo json_encode($products);
+        $list = read_products();
+        sort_products($list);
+        echo json_encode($list);
         break;
 
     case 'get':
         $id = intval($_GET['id'] ?? 0);
-        $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
-        $stmt->execute([$id]);
-        $product = $stmt->fetch();
-        if ($product) {
-            echo json_encode($product);
-        } else {
-            http_response_code(404);
-            echo json_encode(['error' => 'Producto no encontrado']);
-        }
+        $list = read_products();
+        foreach ($list as $p) if (intval($p['id']) === $id) { echo json_encode($p); exit; }
+        http_response_code(404);
+        echo json_encode(['error' => 'Producto no encontrado']);
         break;
 
     case 'create':
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); echo json_encode(['error' => 'Method not allowed']); exit(); }
         $input = json_decode(file_get_contents('php://input'), true);
-        $stmt = $pdo->prepare("INSERT INTO products (name, brand, description, price, category, image) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$input['name'] ?? '', $input['brand'] ?? '', $input['description'] ?? '', intval($input['price'] ?? 0), $input['category'] ?? '', $input['image'] ?? '']);
-        echo json_encode(['success' => true, 'id' => $pdo->lastInsertId()]);
+        $list = read_products();
+        $maxId = 0; foreach ($list as $p) $maxId = max($maxId, intval($p['id'] ?? 0));
+        $newId = $maxId + 1;
+        $newProduct = [
+            'id' => $newId,
+            'name' => trim($input['name'] ?? ''),
+            'brand' => trim($input['brand'] ?? ''),
+            'description' => trim($input['description'] ?? ''),
+            'price' => intval($input['price'] ?? 0),
+            'category' => trim($input['category'] ?? ''),
+            'image' => $input['image'] ?? '',
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        $list[] = $newProduct;
+        write_products($list);
+        echo json_encode(['success' => true, 'id' => $newId]);
         break;
 
     case 'update':
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); echo json_encode(['error' => 'Method not allowed']); exit(); }
         $input = json_decode(file_get_contents('php://input'), true);
         $id = intval($input['id'] ?? 0);
-        $stmt = $pdo->prepare("UPDATE products SET name=?, brand=?, description=?, price=?, category=?, image=? WHERE id=?");
-        $stmt->execute([$input['name'] ?? '', $input['brand'] ?? '', $input['description'] ?? '', intval($input['price'] ?? 0), $input['category'] ?? '', $input['image'] ?? '', $id]);
+        $list = read_products();
+        $found = false;
+        foreach ($list as &$p) {
+            if (intval($p['id']) === $id) {
+                $p['name'] = trim($input['name'] ?? $p['name']);
+                $p['brand'] = trim($input['brand'] ?? $p['brand']);
+                $p['description'] = trim($input['description'] ?? $p['description']);
+                $p['price'] = intval($input['price'] ?? $p['price']);
+                $p['category'] = trim($input['category'] ?? $p['category']);
+                if (isset($input['image']) && $input['image'] !== '') $p['image'] = $input['image'];
+                $found = true; break;
+            }
+        }
+        unset($p);
+        if (!$found) { http_response_code(404); echo json_encode(['error'=>'Producto no encontrado']); exit; }
+        write_products($list);
         echo json_encode(['success' => true]);
         break;
 
@@ -54,8 +105,11 @@ switch ($action) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); echo json_encode(['error' => 'Method not allowed']); exit(); }
         $input = json_decode(file_get_contents('php://input'), true);
         $id = intval($input['id'] ?? 0);
-        $stmt = $pdo->prepare("DELETE FROM products WHERE id = ?");
-        $stmt->execute([$id]);
+        $list = read_products();
+        $orig = count($list);
+        $list = array_values(array_filter($list, fn($p)=> intval($p['id']) !== $id));
+        if (count($list) === $orig) { http_response_code(404); echo json_encode(['error'=>'Producto no encontrado']); exit; }
+        write_products($list);
         echo json_encode(['success' => true]);
         break;
 
@@ -64,4 +118,3 @@ switch ($action) {
         echo json_encode(['error' => 'Acción no válida']);
         break;
 }
-?>
