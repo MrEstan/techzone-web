@@ -1010,22 +1010,42 @@
       const ADMIN_USER = 'admin';
 
       async function getAdminCredentials() {
-        const cached = localStorage.getItem('techzoneuy_admin_creds');
-        if (cached) {
-          try {
-            const parsed = JSON.parse(cached);
-            if (parsed && parsed.password) return parsed;
-          } catch (e) {}
-        }
+        // Prioriza data/admin.json (fuente real) y auto-corrige cache viejo con zonatech2026
         try {
           const res = await fetch('data/admin.json?t=' + Date.now(), { cache: 'no-store' });
           if (res.ok) {
             const data = await res.json();
-            if (data && data.password) return data;
+            if (data && data.password) {
+              // invalida cache stale
+              const cached = localStorage.getItem('techzoneuy_admin_creds');
+              if (cached) {
+                try { const p = JSON.parse(cached); if (p.password !== data.password) localStorage.setItem('techzoneuy_admin_creds', JSON.stringify(data)); } catch(e) { localStorage.setItem('techzoneuy_admin_creds', JSON.stringify(data)); }
+              }
+              return data;
+            }
           }
         } catch (err) {}
-        return { username: 'admin', password: 'zonatech2026' };
+        const cached = localStorage.getItem('techzoneuy_admin_creds');
+        if (cached) {
+          try {
+            const parsed = JSON.parse(cached);
+            if (parsed && parsed.password) {
+              // migra cache viejo zonatech2026 -> techzone2024
+              if (parsed.password === 'zonatech2026') {
+                parsed.password = 'techzone2024';
+                localStorage.setItem('techzoneuy_admin_creds', JSON.stringify(parsed));
+              }
+              return parsed;
+            }
+          } catch (e) {}
+        }
+        return { username: 'admin', password: 'techzone2024' };
       }
+      // Limpieza inmediata de cache stale al cargar la pagina
+      try {
+        const c = JSON.parse(localStorage.getItem('techzoneuy_admin_creds')||'null');
+        if (c && c.password === 'zonatech2026') localStorage.removeItem('techzoneuy_admin_creds');
+      } catch(e) {}
 
       function setAdminCredentialsCache(data) {
         try {
@@ -1042,7 +1062,7 @@
 
         const admin = await getAdminCredentials();
 
-        if (username === ADMIN_USER && password === (admin.password || 'zonatech2026')) {
+        if (username === ADMIN_USER && password === (admin.password || 'techzone2024')) {
           localStorage.setItem('techzoneuy_admin', 'true');
           localStorage.setItem('techzoneuy_user', username);
           setAdminCredentialsCache(admin);
