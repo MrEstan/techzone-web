@@ -4,5 +4,6 @@
   {"id": 3, "slug": "parlantes", "name": "Parlantes"},
   {"id": 4, "slug": "fundas", "name": "Fundas"},
   {"id": 5, "slug": "cargadores", "name": "Cargadores"},
-  {"id": 6, "slug": "accesorios", "name": "Accesorios"}
+  {"id": 6, "slug": "accesorios", "name": "Accesorios"},
+  {"id": 7, "slug": "relojes", "name": "Relojes"}
 ]
