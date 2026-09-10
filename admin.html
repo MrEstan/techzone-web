@@ -1158,12 +1158,20 @@
         el.classList.add('pulse-value');
       }
 
+      function normalizeItems(items) {
+        if (Array.isArray(items)) return items;
+        if (items && typeof items === 'object') return [items];
+        if (typeof items === 'string') { try { const p=JSON.parse(items); return Array.isArray(p)?p:(p?[p]:[]);} catch(e){return [];} }
+        return [];
+      }
       function updateStats() {
+        // Normaliza orders por si items viene como objeto o string (pedidos de prueba)
+        orders.forEach(o => { o.items = normalizeItems(o.items); });
         const pending = orders.filter(o => o.status === 'pendiente').length;
         const completed = orders.filter(o => o.status === 'completado').length;
         const cancelled = orders.filter(o => o.status === 'cancelado').length;
         const totalRevenue = orders.filter(o => o.status === 'completado').reduce((sum, o) => sum + parseInt(o.total || 0), 0);
-        const totalItems = orders.filter(o => o.status === 'completado').reduce((sum, o) => sum + (o.items || []).reduce((s, i) => s + i.quantity, 0), 0);
+        const totalItems = orders.filter(o => o.status === 'completado').reduce((sum, o) => sum + normalizeItems(o.items).reduce((s, i) => s + (parseInt(i.quantity)||0), 0), 0);
 
         const updateEl = (id, value) => {
           const el = document.getElementById(id);
@@ -1204,7 +1212,7 @@
                   <i data-lucide="package" class="w-5 h-5 text-blue-400"></i>
                 </div>
                 <div class="min-w-0">
-                  <p class="font-medium text-sm truncate">${(order.items || []).map(i => i.name).join(', ') || 'Sin productos'}</p>
+                  <p class="font-medium text-sm truncate">${normalizeItems(order.items).map(i => i.name).join(', ') || 'Sin productos'}</p>
                   <p class="text-gray-500 text-xs">${new Date(order.created_at).toLocaleString('es-UY')}</p>
                 </div>
               </div>
@@ -1342,13 +1350,13 @@
               </div>
             </div>
             <div class="bg-gray-800/40 rounded-lg p-3 sm:p-4 space-y-2">
-              ${(order.items || []).map(item => `
+              ${normalizeItems(order.items).map(item => `
                 <div class="flex items-center justify-between text-xs sm:text-sm">
                   <span class="text-gray-300">${item.quantity}x ${item.name}</span>
                   <span class="text-gray-400 font-medium">$${(item.price * item.quantity).toLocaleString('es-UY')}</span>
                 </div>
               `).join('')}
-              ${(order.items || []).length === 0 ? '<p class="text-gray-500 text-sm">Sin productos</p>' : ''}
+              ${normalizeItems(order.items).length === 0 ? '<p class="text-gray-500 text-sm">Sin productos</p>' : ''}
             </div>
           </div>
         `).join('');
