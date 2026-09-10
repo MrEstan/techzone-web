@@ -1247,11 +1247,28 @@
       </div>
     </div>
 
+    <!-- Checkout Modal: pide datos antes de enviar a admin -->
+    <div id="checkout-modal" class="hidden fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4">
+      <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-md p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="shopping-bag" class="w-5 h-5 text-blue-500"></i> Finalizar pedido</h3>
+          <button onclick="closeCheckoutModal()" class="p-2 hover:bg-gray-800 rounded-lg"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <p class="text-gray-400 text-sm mb-4">Dejá tus datos y enviamos el pedido al panel Admin + WhatsApp</p>
+        <div class="space-y-3">
+          <div><label class="block text-sm text-gray-300 mb-1">Nombre *</label><input id="customer-name" type="text" placeholder="Ej: Juan Pérez" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500" /></div>
+          <div><label class="block text-sm text-gray-300 mb-1">WhatsApp / Tel *</label><input id="customer-phone" type="tel" placeholder="Ej: 099 123 456" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500" /></div>
+          <p id="checkout-error" class="hidden text-red-400 text-sm"></p>
+        </div>
+        <div class="flex gap-3 mt-6">
+          <button onclick="closeCheckoutModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 rounded-xl">Cancelar</button>
+          <button onclick="submitOrder()" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2"><i data-lucide="send" class="w-4 h-4"></i> Enviar pedido</button>
+        </div>
+      </div>
+    </div>
+
     <script>
       lucide.createIcons();
-
-      // Clear stale localStorage products (old data with placeholder images)
-      localStorage.removeItem('techzoneuy_products.json');
 
       // Mobile Menu
       const mobileMenuBtn = document.getElementById("mobile-menu-btn");
@@ -1414,33 +1431,57 @@
         document.body.style.overflow = "";
       }
 
-      async function checkoutWhatsApp() {
+      function checkoutWhatsApp() {
         if (cart.length === 0) return;
+        // Abre modal para pedir datos del cliente
+        document.getElementById('customer-name').value = '';
+        document.getElementById('customer-phone').value = '';
+        document.getElementById('checkout-error').classList.add('hidden');
+        document.getElementById('checkout-modal').classList.remove('hidden');
+        lucide.createIcons();
+      }
+      function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); }
+
+      async function submitOrder() {
+        const name = document.getElementById('customer-name').value.trim();
+        const phone = document.getElementById('customer-phone').value.trim();
+        const errEl = document.getElementById('checkout-error');
+        if (!name || !phone) { errEl.textContent = 'Completa nombre y WhatsApp'; errEl.classList.remove('hidden'); return; }
+        if (phone.length < 7) { errEl.textContent = 'Teléfono inválido'; errEl.classList.remove('hidden'); return; }
 
         const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
         const orderData = {
+          customer_name: name,
+          customer_phone: phone,
           items: cart.map((item) => ({ name: item.name, price: item.price, quantity: item.quantity })),
           total: totalPrice,
         };
 
         try {
-          await fetch('api/orders.php?action=create', {
+          const res = await fetch('api/orders.php?action=create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData),
           });
-        } catch (err) { console.error('Error guardando pedido:', err); }
+          if (!res.ok) throw new Error('Error guardando pedido');
+          await res.json();
+        } catch (err) { console.error('Error guardando pedido:', err); errEl.textContent='No se pudo guardar, igual te llevamos a WhatsApp'; errEl.classList.remove('hidden'); }
 
         let message = "✨ *Hola! Quiero realizar un pedido* ✨\n\n";
+        message += `👤 *Cliente:* ${name}\n`;
+        message += `📱 *Tel:* ${phone}\n`;
         message += "━━━━━━━━━━━━━━━━━━━━━━\n";
         message += "🛒 *ME INTERESAN ESTOS PRODUCTOS:*\n";
         message += "━━━━━━━━━━━━━━━━━━━━━━\n\n";
-        cart.forEach((item) => { message += `├ ${item.quantity}x *${item.name}*\n\n`; });
+        cart.forEach((item) => { message += `├ ${item.quantity}x *${item.name}* - $${(item.price*item.quantity).toLocaleString('es-UY')}\n`; });
+        message += `\n💰 *Total: $${totalPrice.toLocaleString('es-UY')}*\n`;
         message += "━━━━━━━━━━━━━━━━━━━━━━\n\n";
-        message += "Me gustaría saber en qué colores y modelos están disponibles de estos productos. 😊\n\n¡Gracias! 🙌";
+        message += "Me gustaría saber en qué colores y modelos están disponibles. 😊\n\n¡Gracias! 🙌";
 
+        closeCheckoutModal();
         window.open(`https://api.whatsapp.com/send?phone=59892486156&text=${encodeURIComponent(message)}`, "_blank");
-        cart = []; saveCart(); closeCart();
+        // Pequeño delay para que el pedido quede registrado antes de vaciar
+        setTimeout(()=>{ cart = []; saveCart(); closeCart(); updateCartUI(); }, 300);
       }
 
       updateCartUI();
