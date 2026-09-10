@@ -617,8 +617,9 @@
             </div>
           </div>
 
-          <!-- Filtros -->
+          <!-- Filtros - generados dinámicamente desde Categorías -->
           <div
+            id="category-filters"
             class="flex flex-wrap justify-center gap-2 sm:gap-3 fade-up"
             style="transition-delay: 0.2s"
           >
@@ -627,36 +628,6 @@
               class="category-btn px-4 sm:px-5 py-2 rounded-full border border-gray-700 text-xs sm:text-sm font-medium text-gray-300 hover:border-blue-500 hover:text-white transition-all bg-blue-600 border-blue-600 text-white active:scale-95"
               data-category="all"
             >Todos</button>
-            <button
-              onclick="filterProducts('airpods')"
-              class="category-btn px-4 sm:px-5 py-2 rounded-full border border-gray-700 text-xs sm:text-sm font-medium text-gray-300 hover:border-blue-500 hover:text-white transition-all active:scale-95"
-              data-category="airpods"
-            >AirPods</button>
-            <button
-              onclick="filterProducts('auriculares')"
-              class="category-btn px-4 sm:px-5 py-2 rounded-full border border-gray-700 text-xs sm:text-sm font-medium text-gray-300 hover:border-blue-500 hover:text-white transition-all active:scale-95"
-              data-category="auriculares"
-            >Auriculares</button>
-            <button
-              onclick="filterProducts('parlantes')"
-              class="category-btn px-4 sm:px-5 py-2 rounded-full border border-gray-700 text-xs sm:text-sm font-medium text-gray-300 hover:border-blue-500 hover:text-white transition-all active:scale-95"
-              data-category="parlantes"
-            >Parlantes</button>
-            <button
-              onclick="filterProducts('fundas')"
-              class="category-btn px-4 sm:px-5 py-2 rounded-full border border-gray-700 text-xs sm:text-sm font-medium text-gray-300 hover:border-blue-500 hover:text-white transition-all active:scale-95"
-              data-category="fundas"
-            >Fundas</button>
-            <button
-              onclick="filterProducts('cargadores')"
-              class="category-btn px-4 sm:px-5 py-2 rounded-full border border-gray-700 text-xs sm:text-sm font-medium text-gray-300 hover:border-blue-500 hover:text-white transition-all active:scale-95"
-              data-category="cargadores"
-            >Cargadores</button>
-            <button
-              onclick="filterProducts('accesorios')"
-              class="category-btn px-4 sm:px-5 py-2 rounded-full border border-gray-700 text-xs sm:text-sm font-medium text-gray-300 hover:border-blue-500 hover:text-white transition-all active:scale-95"
-              data-category="accesorios"
-            >Accesorios</button>
           </div>
         </div>
       </section>
@@ -1595,7 +1566,7 @@
         document.getElementById('product-count').textContent = visible.length;
       }
 
-      // Filter
+      // Filter - categorías dinámicas desde API
       const categoryNames = {
         all: "Todos los productos disponibles.",
         airpods: "AirPods Apple.",
@@ -1608,6 +1579,28 @@
 
       let currentCategory = "all";
       let currentSearch = "";
+
+      async function loadCategoryFilters() {
+        try {
+          const cats = await fetch('api/categories.php?action=list').then(r=>r.json());
+          if (!Array.isArray(cats) || cats.length===0) return;
+          const container = document.getElementById('category-filters');
+          if (!container) return;
+          // Mantiene "Todos", agrega dinámicas (evita duplicar las 6 base si ya existen)
+          const existing = new Set(Array.from(container.querySelectorAll('[data-category]')).map(b=>b.dataset.category));
+          cats.forEach(c => {
+            if (existing.has(c.slug)) return;
+            const btn = document.createElement('button');
+            btn.onclick = () => filterProducts(c.slug);
+            btn.className = "category-btn px-4 sm:px-5 py-2 rounded-full border border-gray-700 text-xs sm:text-sm font-medium text-gray-300 hover:border-blue-500 hover:text-white transition-all active:scale-95";
+            btn.dataset.category = c.slug;
+            btn.textContent = c.name;
+            container.appendChild(btn);
+            if (!categoryNames[c.slug]) categoryNames[c.slug] = c.name + '.';
+          });
+        } catch(e) {}
+      }
+      loadCategoryFilters();
 
       function filterProducts(category) {
         currentCategory = category;
