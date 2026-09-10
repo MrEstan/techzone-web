@@ -1,0 +1,8 @@
+[
+  {"id": 1, "slug": "airpods", "name": "AirPods"},
+  {"id": 2, "slug": "auriculares", "name": "Auriculares"},
+  {"id": 3, "slug": "parlantes", "name": "Parlantes"},
+  {"id": 4, "slug": "fundas", "name": "Fundas"},
+  {"id": 5, "slug": "cargadores", "name": "Cargadores"},
+  {"id": 6, "slug": "accesorios", "name": "Accesorios"}
+]
