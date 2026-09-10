@@ -31,8 +31,8 @@ function env($key, $default = null) {
 
 function supabase_config() {
     return [
-        'url' => env('SUPABASE_URL', env('NEXT_PUBLIC_SUPABASE_URL', '')),
-        'anon_key' => env('SUPABASE_ANON_KEY', env('NEXT_PUBLIC_SUPABASE_ANON_KEY', env('NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', ''))),
+        'url' => env('SUPABASE_URL', env('NEXT_PUBLIC_SUPABASE_URL', 'https://ancpxpnpzlyeuqhaxmsu.supabase.co')),
+        'anon_key' => env('SUPABASE_ANON_KEY', env('NEXT_PUBLIC_SUPABASE_ANON_KEY', env('NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', 'sb_publishable_UNXiEZPjY9cD2EE8lylcWw_rk2WsHd5'))),
         'service_key' => env('SUPABASE_SERVICE_KEY', env('SUPABASE_SECRET_KEY', env('NEXT_PUBLIC_SUPABASE_SECRET_KEY',''))),
         'bucket' => env('SUPABASE_BUCKET', 'product-images'),
     ];
