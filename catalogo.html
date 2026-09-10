@@ -1585,7 +1585,13 @@
       }
 
       function updateProductCount() {
-        const visible = Array.from(document.querySelectorAll('.product-card')).filter(c => c.style.display !== 'none');
+        const all = document.querySelectorAll('.product-card');
+        const visible = Array.from(all).filter(c => {
+          // Ignora cards dentro de #products-grid si está oculto (hidden) y respeta display:none / offsetParent
+          if (c.closest('#products-grid.hidden')) return false;
+          const cs = window.getComputedStyle(c);
+          return cs.display !== 'none' && c.offsetParent !== null && c.style.display !== 'none';
+        });
         document.getElementById('product-count').textContent = visible.length;
       }
 
